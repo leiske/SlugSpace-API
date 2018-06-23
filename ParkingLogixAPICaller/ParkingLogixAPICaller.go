@@ -11,6 +11,7 @@ import (
 	"github.com/colbyleiske/SlugSpace/utils"
 
 	_ "github.com/go-sql-driver/mysql"
+	"fmt"
 )
 
 type parkingLotData []struct {
@@ -53,7 +54,7 @@ func main() {
 		panic(err)
 	}
 
-	stmt, err := db.Prepare("UPDATE slugspace.LotOverview SET FreeSpaces= ?, LastUpdated= ? WHERE Name= ?")
+	stmt, err := db.Prepare(utils.UpdateLotInfoByName)
 	if err != nil {
 		panic(err)
 	}
@@ -61,4 +62,6 @@ func main() {
 	if _, err = stmt.Exec(parkingLotData[0].FreeSpaces, parkingLotData[0].DateTime, parkingLotData[0].LocationName); err != nil {
 		panic(err)
 	}
+
+	fmt.Printf("Updated at %v",time.Now())
 }
