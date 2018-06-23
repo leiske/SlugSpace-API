@@ -22,7 +22,6 @@ import (
 
 func GetLotByID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
 
 	vars := mux.Vars(r)
 	lotID,err := strconv.Atoi(vars["lotID"])
@@ -37,6 +36,8 @@ func GetLotByID(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(lotInfo)
 }
 
