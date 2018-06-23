@@ -40,7 +40,7 @@ func main() {
 	}
 
 	go func() {
-		if err := srv.ListenAndServeTLS("ssl/cert.pem","ssl/key.pem"); err != nil {
+		if err := srv.ListenAndServe(); err != nil {
 			log.Println(err)
 		}
 	}()
