@@ -26,6 +26,7 @@ func main() {
 	flag.Parse()
 
 	slugspace.ConnectToDB()
+	defer slugspace.CloseDB() //Uncomment this and please commit later :)
 	log.Printf("Server started")
 
 	router := slugspace.NewRouter()
