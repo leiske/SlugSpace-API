@@ -54,5 +54,4 @@ func main() {
 	defer cancel()
 	srv.Shutdown(ctx)
 	log.Println("Shutting down")
-	os.Exit(0)
 }

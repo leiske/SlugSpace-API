@@ -37,5 +37,5 @@ func GetDB() (*sql.DB) {
 
 func CloseDB() {
 	db.Close()
-	fmt.Println("DB Connection Closed")
+	fmt.Println("DB connection closed")
 }
