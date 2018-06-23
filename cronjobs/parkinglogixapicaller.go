@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/colbyleiske/SlugSpace/utils"
+	"github.com/colbyleiske/slugspace/utils"
 
 	_ "github.com/go-sql-driver/mysql"
 	"fmt"
