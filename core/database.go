@@ -30,25 +30,10 @@ func ConnectToDB() {
 
 }
 
-func GetLotInfo(lotID int) Lot {
-	lotInfo := Lot{}
-	rows, err := db.Query(utils.GetLotByID, lotID)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		err := rows.Scan(&lotInfo.Id, &lotInfo.Name, &lotInfo.FreeSpaces, &lotInfo.TotalSpaces, &lotInfo.LastUpdated)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-	err = rows.Err()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return lotInfo
+func GetDB() (*sql.DB) {
+	return db
 }
+
 
 func CloseDB() {
 	db.Close()
