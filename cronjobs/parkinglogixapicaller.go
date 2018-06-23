@@ -23,7 +23,7 @@ type parkingLotData []struct {
 func main() {
 	db, err := sql.Open("mysql", utils.SQLCredentials)
 	if err != nil {
-		log.Fatal(err) //fix this to write out to a text file that I can check up on every so often
+		log.Fatal(err)
 	}
 	defer db.Close()
 
@@ -33,7 +33,7 @@ func main() {
 
 	request, err := http.NewRequest(http.MethodGet, utils.ParkingLogixAPIURL, nil)
 	if err != nil {
-		panic(err) //write to DB with error ??
+		panic(err)
 	}
 
 	request.Header.Add(utils.ParkingLogixAPIHeader, utils.ParkingLogixAPIKey)
