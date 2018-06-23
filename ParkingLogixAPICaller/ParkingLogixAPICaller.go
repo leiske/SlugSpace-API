@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/colbyleiske/ParkingLogixAPICaller/utils"
+	"github.com/colbyleiske/SlugSpace/utils"
 
 	_ "github.com/go-sql-driver/mysql"
 )
