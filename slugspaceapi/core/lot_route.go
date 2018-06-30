@@ -7,7 +7,7 @@
  * Contact: colby.leiske@gmail.com
  */
 
-package routes
+package slugspace
 
 import (
 	"net/http"
@@ -44,7 +44,7 @@ func GetLotByID(w http.ResponseWriter, r *http.Request) {
 func GetLotInfo(lotID int) (Lot,error) {
 	lotInfo := Lot{}
 
-	if err := db.QueryRow(utils.GetLotByID,lotID).Scan(&lotInfo.Id, &lotInfo.Name, &lotInfo.FreeSpaces, &lotInfo.TotalSpaces, &lotInfo.LastUpdated); err == nil {
+	if err := GetDB().QueryRow(utils.GetLotByID,lotID).Scan(&lotInfo.Id, &lotInfo.Name, &lotInfo.FreeSpaces, &lotInfo.TotalSpaces, &lotInfo.LastUpdated); err == nil {
 		return lotInfo,nil
 	} else if err == sql.ErrNoRows {
 		return lotInfo, errors.New("ID not found")

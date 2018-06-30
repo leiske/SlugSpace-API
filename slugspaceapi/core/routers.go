@@ -25,7 +25,7 @@ type Routes []Route
 
 func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
-	for _, route := range routes {
+	for _, route := range routeList {
 		var handler http.Handler
 		handler = route.HandlerFunc
 		handler = Logger(handler, route.Name)
@@ -40,7 +40,7 @@ func NewRouter() *mux.Router {
 	return router
 }
 
-var routes = Routes{
+var routeList = Routes{
 	Route{
 		"GetLotByID",
 		http.MethodGet,
