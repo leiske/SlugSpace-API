@@ -10,7 +10,6 @@
 package slugspace
 
 import (
-	"fmt"
 	"net/http"
 	"github.com/gorilla/mux"
 )
@@ -41,18 +40,7 @@ func NewRouter() *mux.Router {
 	return router
 }
 
-func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
-}
-
 var routes = Routes{
-	Route{
-		"Index",
-		http.MethodGet,
-		"/v1/",
-		Index,
-	},
-
 	Route{
 		"GetLotByID",
 		http.MethodGet,

@@ -7,7 +7,7 @@
  * Contact: colby.leiske@gmail.com
  */
 
-package slugspace
+package routes
 
 import (
 	"net/http"

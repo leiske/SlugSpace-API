@@ -63,5 +63,5 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf("Updated at %v",time.Now())
+	fmt.Printf("Updated at %v\n",time.Now())
 }

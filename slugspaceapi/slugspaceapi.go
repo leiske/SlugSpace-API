@@ -12,12 +12,12 @@ package main
 import (
 	"log"
 	"net/http"
-	"github.com/colbyleiske/slugspace/core"
 	"time"
 	"os"
 	"os/signal"
 	"context"
 	"flag"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core"
 )
 
 func main() {
@@ -26,7 +26,7 @@ func main() {
 	flag.Parse()
 
 	slugspace.ConnectToDB()
-	defer slugspace.CloseDB() //Uncomment this and please commit later :)
+	defer slugspace.CloseDB()
 	log.Printf("Server started")
 
 	router := slugspace.NewRouter()
