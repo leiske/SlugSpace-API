@@ -10,8 +10,8 @@ import (
 
 	"github.com/colbyleiske/slugspace/utils"
 
-	_ "github.com/go-sql-driver/mysql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type parkingLotData []struct {
@@ -63,5 +63,5 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf("Updated at %v\n",time.Now())
+	fmt.Printf("Updated at %v\n", time.Now())
 }

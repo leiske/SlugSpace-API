@@ -1,18 +1,17 @@
 package main
 
 import (
+	"context"
+	"database/sql"
+	"flag"
+	"fmt"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core"
+	"github.com/colbyleiske/slugspace/utils"
 	"log"
 	"net/http"
-	"time"
 	"os"
 	"os/signal"
-	"context"
-	"flag"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core"
-	"fmt"
-	"database/sql"
-	"github.com/colbyleiske/slugspace/utils"
-	"github.com/gorilla/mux"
+	"time"
 )
 
 var s *slugspace.Store
@@ -27,14 +26,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	dal := DBAccessLayer{db:db}
-	s = slugspace.NewStore(db,dal)
+	dal := DBAccessLayer{db: db}
+	s = slugspace.NewStore(db, dal)
 	defer s.CloseDB()
 
-	router := mux.NewRouter()
-	router.Use(LoggerMiddleware)
-
-	router.Handle("/v1/lot/{lotID}",GetLotByID(s)).Methods("GET")
+	router := slugspace.CreateRouter(s)
 
 	srv := &http.Server{
 		Addr:         "localhost:8080",
@@ -62,8 +58,7 @@ func main() {
 	log.Println("Shutting down")
 }
 
-
-func connectToDB() (*sql.DB,error) {
+func connectToDB() (*sql.DB, error) {
 	fmt.Println("Connecting to DB")
 
 	db, err := sql.Open("mysql", utils.SQLCredentials)
@@ -77,5 +72,5 @@ func connectToDB() (*sql.DB,error) {
 		log.Panic(err)
 	}
 	fmt.Println("Connected")
-	return db,nil
+	return db, nil
 }
