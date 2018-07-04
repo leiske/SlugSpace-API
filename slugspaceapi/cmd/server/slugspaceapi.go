@@ -1,12 +1,3 @@
-/*
- * SlugSpace
- *
- * SlugSpace API - Realtime Parking Data and Metrics.
- *
- * API version: 0.0.1
- * Contact: colby.leiske@gmail.com
- */
-
 package main
 
 import (
@@ -18,18 +9,32 @@ import (
 	"context"
 	"flag"
 	"github.com/colbyleiske/slugspace/slugspaceapi/core"
+	"fmt"
+	"database/sql"
+	"github.com/colbyleiske/slugspace/utils"
+	"github.com/gorilla/mux"
 )
+
+var s *slugspace.Store
 
 func main() {
 	var wait time.Duration
 	flag.DurationVar(&wait, "graceful-timeout", 15*time.Second, "the duration for which the server gracefully wait for existing connections to finish - e.g. 15s or 1m")
 	flag.Parse()
 
-	slugspace.ConnectToDB()
-	defer slugspace.CloseDB()
-	log.Printf("Server started")
+	db, err := connectToDB()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	router := slugspace.NewRouter()
+	dal := DBAccessLayer{db:db}
+	s = slugspace.NewStore(db,dal)
+	defer s.CloseDB()
+
+	router := mux.NewRouter()
+	router.Use(LoggerMiddleware)
+
+	router.Handle("/v1/lot/{lotID}",GetLotByID(s)).Methods("GET")
 
 	srv := &http.Server{
 		Addr:         "localhost:8080",
@@ -40,6 +45,7 @@ func main() {
 	}
 
 	go func() {
+		log.Printf("Server started")
 		if err := srv.ListenAndServe(); err != nil {
 			log.Println(err)
 		}
@@ -54,4 +60,22 @@ func main() {
 	defer cancel()
 	srv.Shutdown(ctx)
 	log.Println("Shutting down")
+}
+
+
+func connectToDB() (*sql.DB,error) {
+	fmt.Println("Connecting to DB")
+
+	db, err := sql.Open("mysql", utils.SQLCredentials)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	fmt.Println("Checking connection...")
+
+	if err = db.Ping(); err != nil {
+		log.Panic(err)
+	}
+	fmt.Println("Connected")
+	return db,nil
 }

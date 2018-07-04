@@ -1,5 +1,5 @@
 # SlugSpace
-Real-time Parking Metrics and Analysis
+Real-time Parking Data and Metrics
 <br>
 ---
 ## About
