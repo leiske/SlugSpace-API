@@ -11,5 +11,7 @@ func CreateRouter(s *Store) *mux.Router {
 
 	//route registration
 	router.Handle("/v1/lot/{lotID}", s.GetLotByID()).Methods("GET")
+	router.Handle("/v1/lot", s.GetLots()).Methods("GET")
+
 	return router
 }

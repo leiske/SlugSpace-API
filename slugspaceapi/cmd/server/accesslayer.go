@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/colbyleiske/slugspace/slugspaceapi/models"
 	"github.com/colbyleiske/slugspace/utils"
+	"log"
 )
 
 type DBAccessLayer struct {
@@ -21,4 +22,29 @@ func (d DBAccessLayer) GetLotInfo(lotID int) (models.Lot, error) {
 	} else {
 		return lotInfo, err
 	}
+}
+
+func (d DBAccessLayer) GetLots() ([]models.Lot, error) {
+	var lots []models.Lot
+
+	rows, err := d.db.Query(utils.GetLots)
+	if err != nil {
+		return lots, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		lotInfo := models.Lot{}
+		if err = rows.Scan(&lotInfo.Id, &lotInfo.Name, &lotInfo.FreeSpaces, &lotInfo.TotalSpaces, &lotInfo.LastUpdated); err == nil {
+			lots = append(lots,lotInfo)
+		} else {
+			log.Fatal(err)
+			continue
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		return lots, err
+	}
+
+	return lots, nil
 }

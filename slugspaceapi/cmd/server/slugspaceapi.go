@@ -12,6 +12,8 @@ import (
 	"os"
 	"os/signal"
 	"time"
+	_ "github.com/go-sql-driver/mysql"
+
 )
 
 var s *slugspace.Store
@@ -55,6 +57,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), wait)
 	defer cancel()
 	srv.Shutdown(ctx)
+	s.DB().Close()
 	log.Println("Shutting down")
 }
 
