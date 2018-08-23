@@ -32,7 +32,7 @@ func main() {
 		Timeout: 2 * time.Second,
 	}
 
-	for _, URL := range utils.ParkingLogixAPIURL {
+	for id, URL := range utils.ParkingLogixAPIURL {
 		request, err := http.NewRequest(http.MethodGet, URL, nil)
 		if err != nil {
 			panic(err)
@@ -66,5 +66,16 @@ func main() {
 		}
 
 		fmt.Printf("Updated %s at %v\n", parkingLotData[0].LocationName, time.Now())
+
+		stmt, err = db.Prepare(utils.InsertLotDatapoint)
+		if err != nil {
+			panic(err)
+		}
+
+		if _, err = stmt.Exec(id+1, parkingLotData[0].FreeSpaces, parkingLotData[0].DateTime); err != nil {
+			panic(err)
+		}
+
+		fmt.Printf("Inserted datapoint for %s at %v\n", parkingLotData[0].LocationName, time.Now())
 	}
 }
