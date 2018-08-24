@@ -35,16 +35,41 @@ func (d DBAccessLayer) GetLots() ([]models.Lot, error) {
 	for rows.Next() {
 		lotInfo := models.Lot{}
 		if err = rows.Scan(&lotInfo.Id, &lotInfo.FullName, &lotInfo.Name, &lotInfo.Description, &lotInfo.ImageURI, &lotInfo.FreeSpaces, &lotInfo.TotalSpaces, &lotInfo.LastUpdated); err == nil {
-			lots = append(lots,lotInfo)
+			lots = append(lots, lotInfo)
 		} else {
 			log.Fatal(err)
 			continue
 		}
 	}
-	err = rows.Err()
-	if err != nil {
+
+	if err = rows.Err(); err != nil {
 		return lots, err
 	}
 
 	return lots, nil
+}
+
+func (d DBAccessLayer) GetLotDataOverTime(lotID int) ([]models.LotData, error) {
+	lotData := make([]models.LotData, 0)
+	rows, err := d.db.Query(utils.GetLotDataOverTimeByID, lotID)
+	if err != nil {
+		return []models.LotData{}, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var spaces int
+		var time string
+		if err = rows.Scan(&spaces, &time); err != nil {
+			return []models.LotData{}, err
+		}
+		lotData = append(lotData, models.LotData{FreeSpaces: spaces, TimeTaken: time})
+	}
+
+	if err = rows.Err(); err != nil {
+		return []models.LotData{}, err
+	}
+
+	return lotData, nil
+
 }

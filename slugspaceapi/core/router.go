@@ -1,8 +1,9 @@
 package slugspace
 
 import (
-	"github.com/gorilla/mux"
 	"github.com/colbyleiske/slugspace/slugspaceapi/core/middleware"
+	"github.com/gorilla/mux"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 )
 
 func CreateRouter(s *Store) *mux.Router {
@@ -10,8 +11,9 @@ func CreateRouter(s *Store) *mux.Router {
 	router.Use(middleware.LoggerMiddleware)
 
 	//route registration
-	router.Handle("/v1/lot/{lotID}", s.GetLotByID()).Methods("GET")
-	router.Handle("/v1/lot", s.GetLots()).Methods("GET")
+	router.Handle(constants.LotByIDFull, s.GetLotByID()).Methods("GET")
+	router.Handle(constants.Lots, s.GetLots()).Methods("GET")
+	router.Handle(constants.LotDataOverTimeFull, s.GetLotDataOverTime()).Methods("GET")
 
 	return router
 }

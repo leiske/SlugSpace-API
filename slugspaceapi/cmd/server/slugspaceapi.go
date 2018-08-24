@@ -7,13 +7,12 @@ import (
 	"fmt"
 	"github.com/colbyleiske/slugspace/slugspaceapi/core"
 	"github.com/colbyleiske/slugspace/utils"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
-	_ "github.com/go-sql-driver/mysql"
-
 )
 
 var s *slugspace.Store

@@ -4,38 +4,19 @@ import (
 	"encoding/json"
 	"github.com/colbyleiske/slugspace/slugspaceapi/models"
 	. "github.com/colbyleiske/slugspace/utils"
-	"github.com/pkg/errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 )
 
-var newLot = models.Lot{
-	Id:          0,
-	Name:        "Core West",
-	FreeSpaces:  50,
-	TotalSpaces: 100,
-	LastUpdated: "2018",
-}
-
-var tStore *Store
-
 func init() {
-	tal := TestRouteAccessLayer{}
+	tal := TestStoreAccessLayer{}
 	tStore = NewStore(nil, tal)
 }
 
-type TestRouteAccessLayer struct{}
-
-func (t TestRouteAccessLayer) GetLotInfo(lotID int) (models.Lot, error) {
-	if lotID == -1 {
-		return models.Lot{}, errors.New("ID not found")
-	}
-	return newLot, nil
-}
-
 func TestGetLotByID(t *testing.T) {
-	req, _ := http.NewRequest("GET", "/v1/lot/1", nil)
+	req, _ := http.NewRequest("GET", constants.LotByIDNoID + "/1", nil)
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
@@ -46,7 +27,7 @@ func TestGetLotByID(t *testing.T) {
 }
 
 func TestGetLotByFakeID(t *testing.T) {
-	req, _ := http.NewRequest("GET", "/v1/lot/-1", nil)
+	req, _ := http.NewRequest("GET", constants.LotByIDNoID + "/-1", nil)
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
@@ -54,7 +35,7 @@ func TestGetLotByFakeID(t *testing.T) {
 }
 
 func TestGetLotByBadID(t *testing.T) {
-	req, _ := http.NewRequest("GET", "/v1/lot/bad_ID", nil)
+	req, _ := http.NewRequest("GET", constants.LotByIDNoID + "/bad_ID", nil)
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 

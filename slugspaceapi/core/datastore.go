@@ -16,6 +16,7 @@ type Store struct {
 type DataAccessLayer interface {
 	GetLotInfo(lotID int) (models.Lot, error)
 	GetLots() ([]models.Lot, error)
+	GetLotDataOverTime(lotID int) ([]models.LotData, error)
 }
 
 func NewStore(db *sql.DB, dal DataAccessLayer) *Store {
