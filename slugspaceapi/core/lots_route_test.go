@@ -2,12 +2,12 @@ package slugspace
 
 import (
 	"encoding/json"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 	"github.com/colbyleiske/slugspace/slugspaceapi/models"
 	. "github.com/colbyleiske/slugspace/utils"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 )
 
 func init() {
@@ -24,6 +24,6 @@ func TestGetLots(t *testing.T) {
 	json.Unmarshal(res.Body.Bytes(), &lot)
 
 	Assert(len(lot), 1, t)
-	Assert(lot[0].FullName, "Core West Parking",t)
+	Assert(lot[0].FullName, "Core West Parking", t)
 	Assert(lot[0], []models.Lot{newLot}[0], t)
 }

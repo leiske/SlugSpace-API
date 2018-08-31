@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"encoding/json"
+	"github.com/colbyleiske/slugspace/slugspaceapi/models"
 	"github.com/gorilla/mux"
 	"strconv"
-	"github.com/colbyleiske/slugspace/slugspaceapi/models"
 )
 
 func (s *Store) GetLotDataOverTime() http.Handler {

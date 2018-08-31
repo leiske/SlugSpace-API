@@ -2,12 +2,12 @@ package slugspace
 
 import (
 	"encoding/json"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 	"github.com/colbyleiske/slugspace/slugspaceapi/models"
 	. "github.com/colbyleiske/slugspace/utils"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 )
 
 func init() {
@@ -16,7 +16,7 @@ func init() {
 }
 
 func TestGetLotByID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.LotByIDNoID + "/1", nil)
+	req, _ := http.NewRequest("GET", constants.LotByIDNoID+"/1", nil)
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
@@ -27,7 +27,7 @@ func TestGetLotByID(t *testing.T) {
 }
 
 func TestGetLotByFakeID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.LotByIDNoID + "/-1", nil)
+	req, _ := http.NewRequest("GET", constants.LotByIDNoID+"/-1", nil)
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
@@ -35,7 +35,7 @@ func TestGetLotByFakeID(t *testing.T) {
 }
 
 func TestGetLotByBadID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.LotByIDNoID + "/bad_ID", nil)
+	req, _ := http.NewRequest("GET", constants.LotByIDNoID+"/bad_ID", nil)
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 

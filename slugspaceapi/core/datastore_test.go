@@ -23,7 +23,7 @@ var newLot = models.Lot{
 
 var newData = models.LotData{
 	FreeSpaces: 50,
-	TimeTaken: "20:12:42",
+	TimeTaken:  "20:12:42",
 }
 
 func (t TestStoreAccessLayer) GetLotInfo(lotID int) (models.Lot, error) {
@@ -39,7 +39,7 @@ func (t TestStoreAccessLayer) GetLots() ([]models.Lot, error) {
 
 func (t TestStoreAccessLayer) GetLotDataOverTime(lotID int) ([]models.LotData, error) {
 	if lotID == -1 {
-		return []models.LotData{},errors.New("ID not found")
+		return []models.LotData{}, errors.New("ID not found")
 	}
 	return []models.LotData{newData}, nil
 }

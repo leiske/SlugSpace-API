@@ -1,9 +1,9 @@
 package slugspace
 
 import (
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 	"github.com/colbyleiske/slugspace/slugspaceapi/core/middleware"
 	"github.com/gorilla/mux"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 )
 
 func CreateRouter(s *Store) *mux.Router {
