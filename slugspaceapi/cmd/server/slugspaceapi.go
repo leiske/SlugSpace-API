@@ -43,7 +43,7 @@ func main() {
 
 	go func() {
 		log.Printf("Server started")
-		if err := srv.ListenAndServe(); err != nil {
+		if err := 	srv.ListenAndServeTLS(utils.CertLocation,utils.KeyLocation); err != nil {
 			log.Println(err)
 		}
 	}()
