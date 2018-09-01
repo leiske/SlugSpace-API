@@ -3,4 +3,8 @@ utils/*
 builds/*
 
 Makefile
-"ssl/*"  
+
+# All Authentication Related things
+slugspaceapi/ssl/*
+slugspaceapi/core/database/auth_accesslayer.go
+slugspaceapi/core/middleware/authentication_route.go

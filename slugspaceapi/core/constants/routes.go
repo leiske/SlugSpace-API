@@ -6,4 +6,6 @@ const (
 	LotByIDFull         = LotByIDNoID + "/{lotID}"
 	LotByIDNoID         = "/v1/lot"
 	Lots                = "/v1/lot"
+
+	RegisterAppInstance = "/v1/register"
 )

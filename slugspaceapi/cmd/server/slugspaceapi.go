@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core"
 	"github.com/colbyleiske/slugspace/utils"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
@@ -13,6 +12,8 @@ import (
 	"os"
 	"os/signal"
 	"time"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
 )
 
 var s *slugspace.Store
@@ -27,7 +28,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	dal := DBAccessLayer{db: db}
+	dal := database.DBAccessLayer{DB: db}
 	s = slugspace.NewStore(db, dal)
 	defer s.CloseDB()
 
