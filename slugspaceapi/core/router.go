@@ -15,6 +15,8 @@ func CreateRouter(s *Store) *mux.Router {
 	router.Handle(constants.Lots, middleware.AuthenticationMiddleware(s.GetLots(),s.db)).Methods("GET")
 	router.Handle(constants.LotDataOverTimeFull, middleware.AuthenticationMiddleware(s.GetLotDataOverTime(),s.db)).Methods("GET")
 	router.Handle(constants.RegisterAppInstance, s.PostRegisterAppInstance()).Methods("POST") //todo: secure this route
+	//router.Handle(constants.LotAverageFreespaceByDay,middleware.AuthenticationMiddleware(s.GetLotAverageFreespaces())).Methods("GET")
+
 
 	return router
 }

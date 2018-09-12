@@ -6,6 +6,8 @@ const (
 	LotByIDFull         = LotByIDNoID + "/{lotID}"
 	LotByIDNoID         = "/v1/lot"
 	Lots                = "/v1/lot"
+	LotAverageFreespaceByDayNoDate = "/v1/avgfree"
+	LotAverageFreespaceByDay       = LotAverageFreespaceByDayNoDate// + "/{day}/{time}"
 
 	RegisterAppInstance = "/v1/register"
 )

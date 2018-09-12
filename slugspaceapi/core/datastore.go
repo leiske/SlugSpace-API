@@ -7,6 +7,7 @@ import (
 	"github.com/colbyleiske/slugspace/slugspaceapi/models"
 	"log"
 	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
+	"time"
 )
 
 type Store struct {
@@ -20,6 +21,7 @@ type DataAccessLayer interface {
 	GetLotDataOverTime(lotID int) ([]models.LotData, error)
 
 	CreateJWT(payload *database.JWTPayload) (string, error)
+	GetLotAverageFreespacesByDate(lotID int, checkDate time.Time , checkTime time.Time) (models.LotAverageFreespaces,error)
 }
 
 func NewStore(db *sql.DB, dal DataAccessLayer) *Store {
