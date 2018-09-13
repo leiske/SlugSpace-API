@@ -13,4 +13,6 @@ func TestCreateRouter(t *testing.T) {
 	AssertNonNil(router.Get(constants.LotDataOverTimeFull), t)
 	AssertNonNil(router.Get(constants.Lots), t)
 	AssertNonNil(router.Get(constants.LotByIDFull), t)
+	AssertNonNil(router.Get(constants.RegisterAppInstance), t)
+
 }

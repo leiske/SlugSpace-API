@@ -21,6 +21,7 @@ func (s *Store) PostRegisterAppInstance() http.Handler {
 		if err != nil {
 			fmt.Println("Decoding payload issue")
 			w.WriteHeader(http.StatusInternalServerError) //please add real logging to this asap
+			s.Log(AUTH,HIGH,"Failed to decode payload for " + payload.GUID,err.Error())
 			return
 		}
 
@@ -29,11 +30,13 @@ func (s *Store) PostRegisterAppInstance() http.Handler {
 			if err.Error() == "Could not generate JWT" {
 				fmt.Println("JWT generating issue")
 				w.WriteHeader(http.StatusInternalServerError)
+				s.Log(AUTH,HIGH,"Could not generate JWT for " + payload.GUID, err.Error())
 				return
 			}
 
 			if err.Error() == "Insufficient claims" {
 				w.WriteHeader(http.StatusBadRequest)
+
 				return
 			}
 

@@ -6,6 +6,7 @@ import (
 	"github.com/colbyleiske/slugspace/slugspaceapi/models"
 	. "github.com/colbyleiske/slugspace/utils"
 	"testing"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
 )
 
 type TestStoreAccessLayer struct{}
@@ -43,6 +44,12 @@ func (t TestStoreAccessLayer) GetLotDataOverTime(lotID int) ([]models.LotData, e
 	}
 	return []models.LotData{newData}, nil
 }
+
+func (d TestStoreAccessLayer) CreateJWT(payload *database.JWTPayload) (string, error) {
+	return "", nil //temp
+}
+
+
 
 func TestNewStore(t *testing.T) {
 	db, _ := sql.Open("", "")
