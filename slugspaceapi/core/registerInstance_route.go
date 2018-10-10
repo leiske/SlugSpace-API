@@ -1,11 +1,11 @@
 package slugspace
 
 import (
-	"net/http"
-			"encoding/json"
+	"encoding/json"
+	"fmt"
 	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
 	"github.com/colbyleiske/slugspace/slugspaceapi/models"
-	"fmt"
+	"net/http"
 )
 
 //This will get gated by some sort of encryption eventually. Can't let anyone just make requests here
@@ -21,7 +21,7 @@ func (s *Store) PostRegisterAppInstance() http.Handler {
 		if err != nil {
 			fmt.Println("Decoding payload issue")
 			w.WriteHeader(http.StatusInternalServerError) //please add real logging to this asap
-			s.Log(AUTH,HIGH,"Failed to decode payload for " + payload.GUID,err.Error())
+			s.Log(AUTH, HIGH, "Failed to decode payload for "+payload.GUID, err.Error())
 			return
 		}
 
@@ -30,7 +30,7 @@ func (s *Store) PostRegisterAppInstance() http.Handler {
 			if err.Error() == "Could not generate JWT" {
 				fmt.Println("JWT generating issue")
 				w.WriteHeader(http.StatusInternalServerError)
-				s.Log(AUTH,HIGH,"Could not generate JWT for " + payload.GUID, err.Error())
+				s.Log(AUTH, HIGH, "Could not generate JWT for "+payload.GUID, err.Error())
 				return
 			}
 
@@ -48,6 +48,6 @@ func (s *Store) PostRegisterAppInstance() http.Handler {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(models.RegistrationResponse{ JWT: tokenString })
+		json.NewEncoder(w).Encode(models.RegistrationResponse{JWT: tokenString})
 	})
 }

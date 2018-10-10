@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
 	"github.com/colbyleiske/slugspace/utils"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
@@ -12,8 +14,6 @@ import (
 	"os"
 	"os/signal"
 	"time"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
 )
 
 var s *slugspace.Store
@@ -44,7 +44,7 @@ func main() {
 
 	go func() {
 		log.Printf("Server started")
-		if err := 	srv.ListenAndServeTLS(utils.CertLocation,utils.KeyLocation); err != nil {
+		if err := srv.ListenAndServeTLS(utils.CertLocation, utils.KeyLocation); err != nil {
 			log.Println(err)
 		}
 	}()

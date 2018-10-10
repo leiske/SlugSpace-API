@@ -27,12 +27,12 @@ const (
 func (s *Store) Log(category Category, severity Severity, messages ...string) {
 	stmt, err := s.db.Prepare(utils.InsertLog)
 	if err != nil {
-		log.Printf("ERROR: Couldn't submit the following log under category %v and %v severity:\n",category,severity)
+		log.Printf("ERROR: Couldn't submit the following log under category %v and %v severity:\n", category, severity)
 		log.Println(messages)
 	}
 
-	if _, err = stmt.Exec(category,severity,messages); err != nil {
-		log.Printf("ERROR: Couldn't submit the following log under category %v and %v severity:\n",category,severity)
+	if _, err = stmt.Exec(category, severity, messages); err != nil {
+		log.Printf("ERROR: Couldn't submit the following log under category %v and %v severity:\n", category, severity)
 		log.Println(messages)
 	}
 }

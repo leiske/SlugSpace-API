@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
 	"github.com/colbyleiske/slugspace/slugspaceapi/models"
 	"log"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
 	"time"
 )
 
@@ -19,9 +19,9 @@ type DataAccessLayer interface {
 	GetLotInfo(lotID int) (models.Lot, error)
 	GetLots() ([]models.Lot, error)
 	GetLotDataOverTime(lotID int) ([]models.LotData, error)
+	GetLotAverageFreespacesByDate(lotID int, checkDate time.Time, checkTime time.Time) (models.LotAverageFreespaces, error)
 
 	CreateJWT(payload *database.JWTPayload) (string, error)
-	GetLotAverageFreespacesByDate(lotID int, checkDate time.Time , checkTime time.Time) (models.LotAverageFreespaces,error)
 }
 
 func NewStore(db *sql.DB, dal DataAccessLayer) *Store {

@@ -30,8 +30,7 @@ func main() {
 
 	for _, file := range files {
 		if !file.IsDir() && file.ModTime().Before(time.Now().AddDate(0, 0, -14)) {
-			err = os.Remove(filepath.Dir(*logPath) + "/" + file.Name())
-			if err != nil {
+			if err = os.Remove(filepath.Dir(*logPath) + "/" + file.Name()); err != nil {
 				log.Fatal(err)
 			}
 		}

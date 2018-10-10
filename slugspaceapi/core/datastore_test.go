@@ -3,10 +3,11 @@ package slugspace
 import (
 	"database/sql"
 	"errors"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
 	"github.com/colbyleiske/slugspace/slugspaceapi/models"
 	. "github.com/colbyleiske/slugspace/utils"
 	"testing"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
+	"time"
 )
 
 type TestStoreAccessLayer struct{}
@@ -45,11 +46,13 @@ func (t TestStoreAccessLayer) GetLotDataOverTime(lotID int) ([]models.LotData, e
 	return []models.LotData{newData}, nil
 }
 
-func (d TestStoreAccessLayer) CreateJWT(payload *database.JWTPayload) (string, error) {
+func (t TestStoreAccessLayer) CreateJWT(payload *database.JWTPayload) (string, error) {
 	return "", nil //temp
 }
 
-
+func (t TestStoreAccessLayer) GetLotAverageFreespacesByDate(lotID int, checkDate time.Time, checkTime time.Time) (models.LotAverageFreespaces, error) {
+	return models.LotAverageFreespaces{}, nil //temp
+}
 
 func TestNewStore(t *testing.T) {
 	db, _ := sql.Open("", "")

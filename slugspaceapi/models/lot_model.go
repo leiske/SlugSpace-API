@@ -15,5 +15,9 @@ type Lot struct {
 
 	TotalSpaces int64 `json:"totalSpaces"`
 
+	Longitude float64 `json:"longitude"`
+
+	Latitude float64 `json:"latitude"`
+
 	LastUpdated string `json:"lastUpdated"`
 }
