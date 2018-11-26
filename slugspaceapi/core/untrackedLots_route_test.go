@@ -15,15 +15,14 @@ func init() {
 	tStore = NewStore(nil, tal)
 }
 
-func TestGetLots(t *testing.T) {
+func TestGetUntrackedLots(t *testing.T) {
 	req, _ := http.NewRequest("GET", constants.Lots, nil)
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
-	var lot []models.Lot
+	var lot []models.UntrackedLot
 	json.Unmarshal(res.Body.Bytes(), &lot)
 
 	Assert(len(lot), 1, t)
-	Assert(lot[0].FullName, "Core West Parking", t)
-	Assert(lot[0], []models.Lot{trackedLot}[0], t)
+	Assert(lot[0], []models.UntrackedLot{untrackedLot}[0], t)
 }

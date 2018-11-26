@@ -14,7 +14,7 @@ type TestStoreAccessLayer struct{}
 
 var tStore *Store
 
-var newLot = models.Lot{
+var trackedLot = models.Lot{
 	Id:          0,
 	Name:        "Core West",
 	FullName:    "Core West Parking",
@@ -23,27 +23,45 @@ var newLot = models.Lot{
 	LastUpdated: "2018",
 }
 
-var newData = models.LotData{
+var trackedLotData = models.LotData{
 	FreeSpaces: 50,
 	TimeTaken:  "20:12:42",
+}
+
+var untrackedLot = models.UntrackedLot{
+	Id: 0,
+	LotName: "Test Untracked Lot Name",
+	LotNumber: 1,
+	/* omitting other fields */
 }
 
 func (t TestStoreAccessLayer) GetLotInfo(lotID int) (models.Lot, error) {
 	if lotID == -1 {
 		return models.Lot{}, errors.New("ID not found")
 	}
-	return newLot, nil
+	return trackedLot, nil
 }
 
 func (t TestStoreAccessLayer) GetLots() ([]models.Lot, error) {
-	return []models.Lot{newLot}, nil
+	return []models.Lot{trackedLot}, nil
+}
+
+func (t TestStoreAccessLayer) GetUntrackedLotInfo(lotID int) (models.UntrackedLot, error) {
+	if lotID == -1 {
+		return models.UntrackedLot{}, errors.New("ID not found")
+	}
+	return untrackedLot, nil
+}
+
+func (t TestStoreAccessLayer) GetUntrackedLots() ([]models.UntrackedLot, error) {
+	return []models.UntrackedLot{untrackedLot}, nil
 }
 
 func (t TestStoreAccessLayer) GetLotDataOverTime(lotID int) ([]models.LotData, error) {
 	if lotID == -1 {
 		return []models.LotData{}, errors.New("ID not found")
 	}
-	return []models.LotData{newData}, nil
+	return []models.LotData{trackedLotData}, nil
 }
 
 func (t TestStoreAccessLayer) CreateJWT(payload *database.JWTPayload) (string, error) {

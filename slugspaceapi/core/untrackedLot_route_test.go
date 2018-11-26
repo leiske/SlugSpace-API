@@ -15,27 +15,27 @@ func init() {
 	tStore = NewStore(nil, tal)
 }
 
-func TestGetLotByID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.Lots+"/1", nil)
+func TestGetUntrackedLotByID(t *testing.T) {
+	req, _ := http.NewRequest("GET", constants.UntrackedLots+"/1", nil)
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
-	var lot models.Lot
+	var lot models.UntrackedLot
 	json.Unmarshal(res.Body.Bytes(), &lot)
 
-	Assert(lot, trackedLot, t)
+	Assert(lot, untrackedLot, t)
 }
 
-func TestGetLotByFakeID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.Lots+"/-1", nil)
+func TestGetUntrackedLotByFakeID(t *testing.T) {
+	req, _ := http.NewRequest("GET", constants.UntrackedLots+"/-1", nil)
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
 	Assert(res.Code, http.StatusNotFound, t)
 }
 
-func TestGetLotByBadID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.Lots+"/bad_ID", nil)
+func TestGetUntrackedLotByBadID(t *testing.T) {
+	req, _ := http.NewRequest("GET", constants.UntrackedLots+"/bad_ID", nil)
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 

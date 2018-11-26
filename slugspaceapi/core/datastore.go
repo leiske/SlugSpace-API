@@ -18,7 +18,12 @@ type Store struct {
 type DataAccessLayer interface {
 	GetLotInfo(lotID int) (models.Lot, error)
 	GetLots() ([]models.Lot, error)
+
+	GetUntrackedLots() ([]models.UntrackedLot, error)
+	GetUntrackedLotInfo(lotID int) (models.UntrackedLot, error)
+
 	GetLotDataOverTime(lotID int) ([]models.LotData, error)
+
 	GetLotAverageFreespacesByDate(lotID int, checkDate time.Time, checkTime time.Time) (models.LotAverageFreespaces, error)
 
 	CreateJWT(payload *database.JWTPayload) (string, error)

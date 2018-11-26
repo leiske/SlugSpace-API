@@ -4,8 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"flag"
-	"fmt"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core"
+		"github.com/colbyleiske/slugspace/slugspaceapi/core"
 	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
 	"github.com/colbyleiske/slugspace/utils"
 	_ "github.com/go-sql-driver/mysql"
@@ -62,18 +61,18 @@ func main() {
 }
 
 func connectToDB() (*sql.DB, error) {
-	fmt.Println("Connecting to DB")
+	log.Println("Connecting to DB")
 
 	db, err := sql.Open("mysql", utils.SQLCredentials)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	fmt.Println("Checking connection...")
+	log.Println("Checking connection...")
 
 	if err = db.Ping(); err != nil {
 		log.Panic(err)
 	}
-	fmt.Println("Connected")
+	log.Println("Connected")
 	return db, nil
 }

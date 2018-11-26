@@ -50,6 +50,43 @@ func (d DBAccessLayer) GetLots() ([]models.Lot, error) {
 	return lots, nil
 }
 
+func (d DBAccessLayer) GetUntrackedLotInfo(lotID int) (models.UntrackedLot, error) {
+	lotInfo := models.UntrackedLot{}
+
+	if err := d.DB.QueryRow(utils.GetUntrackedLotByID, lotID).Scan(&lotInfo.Id, &lotInfo.LotName, &lotInfo.LotNumber, &lotInfo.Longitude, &lotInfo.Latitude, &lotInfo.Permits, &lotInfo.FreeAfter); err == nil {
+		return lotInfo, nil
+	} else if err == sql.ErrNoRows {
+		return lotInfo, errors.New("ID not found")
+	} else {
+		return lotInfo, err
+	}
+}
+
+func (d DBAccessLayer) GetUntrackedLots() ([]models.UntrackedLot, error) {
+	var lots []models.UntrackedLot
+
+	rows, err := d.DB.Query(utils.GetUntrackedLots)
+	if err != nil {
+		return lots, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		lotInfo := models.UntrackedLot{}
+		if err = rows.Scan(&lotInfo.Id, &lotInfo.LotName, &lotInfo.LotNumber, &lotInfo.Longitude, &lotInfo.Latitude, &lotInfo.Permits, &lotInfo.FreeAfter); err == nil {
+			lots = append(lots, lotInfo)
+		} else {
+			log.Println(err)
+			continue
+		}
+	}
+
+	if err = rows.Err(); err != nil {
+		return lots, err
+	}
+
+	return lots, nil
+}
+
 func (d DBAccessLayer) GetLotDataOverTime(lotID int) ([]models.LotData, error) {
 	lotData := make([]models.LotData, 0)
 	rows, err := d.DB.Query(utils.GetLotDataOverTimeByID, lotID)
@@ -76,30 +113,30 @@ func (d DBAccessLayer) GetLotDataOverTime(lotID int) ([]models.LotData, error) {
 
 func (d DBAccessLayer) GetLotAverageFreespacesByDate(lotID int, checkDate time.Time, checkTime time.Time) (models.LotAverageFreespaces, error) {
 	lotAverageFreespaces := models.LotAverageFreespaces{}
-	//
-	//tx , err := d.db.Begin()
-	//if err != nil {
-	//	return lotAverageFreespaces,err
-	//}
-	//
-	//if _, err := tx.Exec("SET @date = STR_TO_DATE(?, '%Y:%c:%e')",checkDate.Format("2006-1-2")); err != nil {
-	//	tx.Rollback() //returns error
-	//	return lotAverageFreespaces, err
-	//}
-	//if _, err := tx.Exec("SET @time = STR_TO_DATE(?, '%k:%i:%s')",checkTime.Format("3:4:5")); err != nil {
-	//	tx.Rollback()// returns error
-	//	return lotAverageFreespaces, err
-	//}
-	//
-	//if err := tx.QueryRow(utils.GetLotAverageFreespacesByDay, lotID).Scan(&lotAverageFreespaces.AverageFreeSpaces); err == sql.ErrNoRows {
-	//	return lotAverageFreespaces, errors.New("ID not found")
-	//} else if err != nil {
-	//	return models.LotAverageFreespaces{},err
-	//}
-	//
-	//if err := tx.Commit(); err != nil {
-	//	tx.Rollback()
-	//	return models.LotAverageFreespaces{},err
-	//}
+
+	tx , err := d.DB.Begin()
+	if err != nil {
+		return lotAverageFreespaces,err
+	}
+
+	if _, err := tx.Exec("SET @date = STR_TO_DATE(?, '%Y:%c:%e')",checkDate.Format("2006-1-2")); err != nil {
+		tx.Rollback() //returns error
+		return lotAverageFreespaces, err
+	}
+	if _, err := tx.Exec("SET @time = STR_TO_DATE(?, '%k:%i:%s')",checkTime.Format("3:4:5")); err != nil {
+		tx.Rollback()// returns error
+		return lotAverageFreespaces, err
+	}
+
+	if err := tx.QueryRow(utils.GetLotAverageFreespacesByDay, lotID).Scan(&lotAverageFreespaces.AverageFreeSpaces); err == sql.ErrNoRows {
+		return lotAverageFreespaces, errors.New("ID not found")
+	} else if err != nil {
+		return models.LotAverageFreespaces{},err
+	}
+
+	if err := tx.Commit(); err != nil {
+		tx.Rollback()
+		return models.LotAverageFreespaces{},err
+	}
 	return lotAverageFreespaces, nil
 }

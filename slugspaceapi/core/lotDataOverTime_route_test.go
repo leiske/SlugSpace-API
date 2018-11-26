@@ -25,7 +25,7 @@ func TestGetLotDataOverTimeByID(t *testing.T) {
 
 	Assert(len(lotData), 1, t)
 	Assert(lotData[0].FreeSpaces, 50, t)
-	Assert(lotData[0], []models.LotData{newData}[0], t)
+	Assert(lotData[0], []models.LotData{trackedLotData}[0], t)
 }
 
 func TestGetLotDataOverTimeByFakeID(t *testing.T) {
