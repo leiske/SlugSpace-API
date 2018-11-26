@@ -11,7 +11,7 @@ type UntrackedLot struct {
 
 	Latitude float64 `json:"latitude"`
 
-	Permits int64 `json:"permits"`
+	Permits string `json:"permits"`
 
 	FreeAfter string `json:"freeAfter"`
 }
