@@ -3,10 +3,10 @@ package constants
 const (
 	LotDataOverTimeFull            = LotDataOverTimeNoID + "/{lotID}"
 	LotDataOverTimeNoID            = "/v1/lotdataovertime"
-	LotByIDFull                    = Lots + "/{lotID}"
+	LotByID                        = Lots + "/{lotID}"
 	Lots                           = "/v1/lot"
-	UntrackedLots                           = "/v1/untrackedlot"
-	UntrackedLotsByID                           = UntrackedLots + "/{lotID}"
+	UntrackedLots                  = "/v1/untrackedlot"
+	UntrackedLotsByID              = UntrackedLots + "/{lotID}"
 	LotAverageFreespaceByDayNoDate = "/v1/avgfree"
 	LotAverageFreespaceByDay       = LotAverageFreespaceByDayNoDate // + "/{day}/{time}"
 
