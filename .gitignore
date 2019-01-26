@@ -7,7 +7,7 @@ builds/*
 utils/*
 
 # Irrelevant data
-../cronjobs/CSVImporter/*
+cronjobs/CSVImporter/*
 
 # All Authentication Related things
 slugspaceapi/ssl/*
