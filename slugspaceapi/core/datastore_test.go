@@ -16,6 +16,11 @@ type TestStoreAccessLayer struct{}
 
 var tStore *Store
 
+func init() {
+	tal := TestStoreAccessLayer{}
+	tStore = NewStore(nil, tal)
+}
+
 var trackedLot = models.Lot{
 	Id:          0,
 	Name:        "Core West",

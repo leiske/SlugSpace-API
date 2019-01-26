@@ -10,11 +10,6 @@ import (
 	"testing"
 )
 
-func init() {
-	tal := TestStoreAccessLayer{}
-	tStore = NewStore(nil, tal)
-}
-
 func TestGetLotByID(t *testing.T) {
 	req, _ := CreateAuthenticatedRequest(constants.Lots+"/1")
 	res := httptest.NewRecorder()
@@ -41,3 +36,17 @@ func TestGetLotByBadID(t *testing.T) {
 
 	Assert(res.Code, http.StatusBadRequest, t)
 }
+
+func TestGetLots(t *testing.T) {
+	req, _ := CreateAuthenticatedRequest(constants.Lots)
+	res := httptest.NewRecorder()
+	CreateRouter(tStore).ServeHTTP(res, req)
+
+	var lot []models.Lot
+	json.Unmarshal(res.Body.Bytes(), &lot)
+
+	Assert(len(lot), 1, t)
+	Assert(lot[0].FullName, "Core West Parking", t)
+	Assert(lot[0], []models.Lot{trackedLot}[0], t)
+}
+

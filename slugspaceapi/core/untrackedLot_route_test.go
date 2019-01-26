@@ -10,11 +10,6 @@ import (
 	"testing"
 )
 
-func init() {
-	tal := TestStoreAccessLayer{}
-	tStore = NewStore(nil, tal)
-}
-
 func TestGetUntrackedLotByID(t *testing.T) {
 	req, _ := CreateAuthenticatedRequest(constants.UntrackedLots+"/1")
 	res := httptest.NewRecorder()
@@ -40,4 +35,16 @@ func TestGetUntrackedLotByBadID(t *testing.T) {
 	CreateRouter(tStore).ServeHTTP(res, req)
 
 	Assert(res.Code, http.StatusBadRequest, t)
+}
+
+func TestGetUntrackedLots(t *testing.T) {
+	req, _ := CreateAuthenticatedRequest(constants.UntrackedLots)
+	res := httptest.NewRecorder()
+	CreateRouter(tStore).ServeHTTP(res, req)
+
+	var lot []models.UntrackedLot
+	json.Unmarshal(res.Body.Bytes(), &lot)
+
+	Assert(len(lot), 1, t)
+	Assert(lot[0], []models.UntrackedLot{untrackedLot}[0], t)
 }
