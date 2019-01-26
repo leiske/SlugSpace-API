@@ -16,7 +16,7 @@ func init() {
 }
 
 func TestGetUntrackedLotByID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.UntrackedLots+"/1", nil)
+	req, _ := CreateAuthenticatedRequest(constants.UntrackedLots+"/1")
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
@@ -27,7 +27,7 @@ func TestGetUntrackedLotByID(t *testing.T) {
 }
 
 func TestGetUntrackedLotByFakeID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.UntrackedLots+"/-1", nil)
+	req, _ := CreateAuthenticatedRequest(constants.UntrackedLots+"/-1")
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
@@ -35,7 +35,7 @@ func TestGetUntrackedLotByFakeID(t *testing.T) {
 }
 
 func TestGetUntrackedLotByBadID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.UntrackedLots+"/bad_ID", nil)
+	req, _ := CreateAuthenticatedRequest(constants.UntrackedLots+"/bad_ID")
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 

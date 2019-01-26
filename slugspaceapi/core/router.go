@@ -4,6 +4,7 @@ import (
 	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 	"github.com/colbyleiske/slugspace/slugspaceapi/core/middleware"
 	"github.com/gorilla/mux"
+	"net/http"
 )
 
 func CreateRouter(s *Store) *mux.Router {
@@ -11,13 +12,17 @@ func CreateRouter(s *Store) *mux.Router {
 	router.Use(middleware.LoggerMiddleware)
 
 	//route registration
-	router.Handle(constants.LotByID, middleware.AuthenticationMiddleware(s.GetLotByID(), s.db)).Methods("GET")
-	router.Handle(constants.Lots, middleware.AuthenticationMiddleware(s.GetLots(), s.db)).Methods("GET")
-	router.Handle(constants.UntrackedLots, middleware.AuthenticationMiddleware(s.GetUntrackedLots(), s.db)).Methods("GET")
-	router.Handle(constants.UntrackedLotsByID, middleware.AuthenticationMiddleware(s.GetUntrackedLotByID(), s.db)).Methods("GET")
-	router.Handle(constants.LotDataOverTimeFull, middleware.AuthenticationMiddleware(s.GetLotDataOverTime(), s.db)).Methods("GET")
+	router.Handle(constants.LotByID, s.AuthMiddleware(s.GetLotByID())).Methods("GET")
+	router.Handle(constants.Lots, s.AuthMiddleware(s.GetLots())).Methods("GET")
+	router.Handle(constants.UntrackedLots, s.AuthMiddleware(s.GetUntrackedLots())).Methods("GET")
+	router.Handle(constants.UntrackedLotsByID, s.AuthMiddleware(s.GetUntrackedLotByID())).Methods("GET")
+	router.Handle(constants.LotDataOverTimeFull, s.AuthMiddleware(s.GetLotDataOverTime())).Methods("GET")
 	router.Handle(constants.RegisterAppInstance, s.PostRegisterAppInstance()).Methods("POST") //todo: secure this route
-	router.Handle(constants.LotAverageFreespaceByDay,middleware.AuthenticationMiddleware(s.GetLotAverageFreespaces(),s.db)).Methods("GET")
+	router.Handle(constants.LotAverageFreespaceByDay,s.AuthMiddleware(s.GetLotAverageFreespaces())).Methods("GET")
 
 	return router
+}
+
+func (s *Store)AuthMiddleware(endpoint http.Handler)(http.Handler) {
+	return middleware.AuthenticationMiddleware(endpoint, s.dal.GetTokenSecret)
 }

@@ -14,4 +14,7 @@ type UntrackedLot struct {
 	Permits string `json:"permits"`
 
 	FreeAfter string `json:"freeAfter"`
+
+	PayStations string `json:"payStations"`
+
 }

@@ -27,6 +27,7 @@ type DataAccessLayer interface {
 	GetLotAverageFreespacesByDate(lotID int, checkDate time.Time, checkTime time.Time) (models.LotAverageFreespaces, error)
 
 	CreateJWT(payload *database.JWTPayload) (string, error)
+	GetTokenSecret(guid interface{}) (interface{}, bool, error)
 }
 
 func NewStore(db *sql.DB, dal DataAccessLayer) *Store {

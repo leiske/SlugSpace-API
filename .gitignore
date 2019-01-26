@@ -6,8 +6,12 @@ UpdateDevServer
 builds/*
 utils/*
 
+# Irrelevant data
+../cronjobs/CSVImporter/*
+
 # All Authentication Related things
 slugspaceapi/ssl/*
 slugspaceapi/core/database/auth_accesslayer.go
+slugspaceapi/core/constants/testing_info.go
 slugspaceapi/core/middleware/authentication_route.go
 

@@ -2,21 +2,16 @@ package slugspace
 
 import (
 	"encoding/json"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
-	"github.com/colbyleiske/slugspace/slugspaceapi/models"
+		"github.com/colbyleiske/slugspace/slugspaceapi/models"
 	. "github.com/colbyleiske/slugspace/utils"
-	"net/http"
-	"net/http/httptest"
+		"net/http/httptest"
 	"testing"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 )
 
-func init() {
-	tal := TestStoreAccessLayer{}
-	tStore = NewStore(nil, tal)
-}
 
 func TestGetLots(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.Lots, nil)
+	req, _ := CreateAuthenticatedRequest(constants.Lots)
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 

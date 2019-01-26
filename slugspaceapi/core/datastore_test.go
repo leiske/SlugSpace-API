@@ -5,10 +5,12 @@ import (
 	"errors"
 	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
 	"github.com/colbyleiske/slugspace/slugspaceapi/models"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 	. "github.com/colbyleiske/slugspace/utils"
 	"testing"
 	"time"
-)
+	"net/http"
+	)
 
 type TestStoreAccessLayer struct{}
 
@@ -68,8 +70,21 @@ func (t TestStoreAccessLayer) CreateJWT(payload *database.JWTPayload) (string, e
 	return "", nil //temp
 }
 
+func (t TestStoreAccessLayer) GetTokenSecret(guid interface{}) (interface{}, bool, error) {
+	return []byte(constants.TestSecret), true, nil
+}
+
 func (t TestStoreAccessLayer) GetLotAverageFreespacesByDate(lotID int, checkDate time.Time, checkTime time.Time) (models.LotAverageFreespaces, error) {
 	return models.LotAverageFreespaces{}, nil //temp
+}
+
+func CreateAuthenticatedRequest(endpoint string) (*http.Request, error) {
+	req, err := http.NewRequest("GET", endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("Authorization",constants.TestToken)
+	return req, nil
 }
 
 func TestNewStore(t *testing.T) {

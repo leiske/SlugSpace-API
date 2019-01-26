@@ -10,13 +10,8 @@ import (
 	"testing"
 )
 
-func init() {
-	tal := TestStoreAccessLayer{}
-	tStore = NewStore(nil, tal)
-}
-
 func TestGetLotDataOverTimeByID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.LotDataOverTimeNoID+"/1", nil)
+	req, _ := CreateAuthenticatedRequest(constants.LotDataOverTimeNoID+"/1")
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
@@ -29,7 +24,7 @@ func TestGetLotDataOverTimeByID(t *testing.T) {
 }
 
 func TestGetLotDataOverTimeByFakeID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.LotDataOverTimeNoID+"/-1", nil)
+	req, _ := CreateAuthenticatedRequest(constants.LotDataOverTimeNoID+"/-1")
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
@@ -41,7 +36,7 @@ func TestGetLotDataOverTimeByFakeID(t *testing.T) {
 }
 
 func TestGetLotDataOverTimeByBadID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.LotDataOverTimeNoID+"/bad_ID", nil)
+	req, _ := CreateAuthenticatedRequest(constants.LotDataOverTimeNoID+"/bad_ID")
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 

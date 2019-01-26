@@ -2,12 +2,11 @@ package slugspace
 
 import (
 	"encoding/json"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
-	"github.com/colbyleiske/slugspace/slugspaceapi/models"
+		"github.com/colbyleiske/slugspace/slugspaceapi/models"
 	. "github.com/colbyleiske/slugspace/utils"
-	"net/http"
-	"net/http/httptest"
+		"net/http/httptest"
 	"testing"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 )
 
 func init() {
@@ -16,7 +15,7 @@ func init() {
 }
 
 func TestGetUntrackedLots(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.Lots, nil)
+	req, _ := CreateAuthenticatedRequest(constants.UntrackedLots)
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 

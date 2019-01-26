@@ -16,7 +16,7 @@ func init() {
 }
 
 func TestGetLotByID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.Lots+"/1", nil)
+	req, _ := CreateAuthenticatedRequest(constants.Lots+"/1")
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
@@ -27,7 +27,7 @@ func TestGetLotByID(t *testing.T) {
 }
 
 func TestGetLotByFakeID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.Lots+"/-1", nil)
+	req, _ := CreateAuthenticatedRequest(constants.Lots+"/-1")
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
@@ -35,7 +35,7 @@ func TestGetLotByFakeID(t *testing.T) {
 }
 
 func TestGetLotByBadID(t *testing.T) {
-	req, _ := http.NewRequest("GET", constants.Lots+"/bad_ID", nil)
+	req, _ := CreateAuthenticatedRequest(constants.Lots+"/bad_ID")
 	res := httptest.NewRecorder()
 	CreateRouter(tStore).ServeHTTP(res, req)
 
