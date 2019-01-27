@@ -1,13 +1,14 @@
-package slugspace
+package slugspace_test
 
 import (
 	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 	. "github.com/colbyleiske/slugspace/utils"
 	"testing"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core"
 )
 
 func TestCreateRouter(t *testing.T) {
-	router := CreateRouter(tStore)
+	router := slugspace.CreateRouter(tStore)
 
 	//Ensure our routes are here
 	AssertNonNil(router.Get(constants.LotDataOverTimeFull), t)

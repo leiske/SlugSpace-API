@@ -7,6 +7,8 @@ const (
 	Lots                           = "/v1/lot"
 	UntrackedLots                  = "/v1/untrackedlot"
 	UntrackedLotsByID              = UntrackedLots + "/{lotID}"
+	Permits                  = "/v1/permit"
+	PermitsByID              = Permits + "/{permitID}"
 	LotAverageFreespaceByDayNoDate = "/v1/avgfree"
 	LotAverageFreespaceByDay       = LotAverageFreespaceByDayNoDate // + "/{day}/{time}"
 

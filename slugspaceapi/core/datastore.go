@@ -16,11 +16,15 @@ type Store struct {
 }
 
 type DataAccessLayer interface {
-	GetLotInfo(lotID int) (models.Lot, error)
+	GetLotByID(lotID int) (models.Lot, error)
 	GetLots() ([]models.Lot, error)
 
 	GetUntrackedLots() ([]models.UntrackedLot, error)
-	GetUntrackedLotInfo(lotID int) (models.UntrackedLot, error)
+	GetUntrackedLotByID(lotID int) (models.UntrackedLot, error)
+
+	GetPermits() ([]models.Permit, error)
+	GetPermitByID(permitID int) (models.Permit, error)
+
 
 	GetLotDataOverTime(lotID int) ([]models.LotData, error)
 
@@ -28,6 +32,8 @@ type DataAccessLayer interface {
 
 	CreateJWT(payload *database.JWTPayload) (string, error)
 	GetTokenSecret(guid interface{}) (interface{}, bool, error)
+
+	Log(category string, severity int, messages ...string)
 }
 
 func NewStore(db *sql.DB, dal DataAccessLayer) *Store {

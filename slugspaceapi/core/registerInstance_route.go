@@ -6,6 +6,7 @@ import (
 	"github.com/colbyleiske/slugspace/slugspaceapi/core/database"
 	"github.com/colbyleiske/slugspace/slugspaceapi/models"
 	"net/http"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 )
 
 //This will get gated by some sort of encryption eventually. Can't let anyone just make requests here
@@ -21,7 +22,7 @@ func (s *Store) PostRegisterAppInstance() http.Handler {
 		if err != nil {
 			fmt.Println("Decoding payload issue")
 			w.WriteHeader(http.StatusInternalServerError) //please add real logging to this asap
-			s.Log(AUTH, HIGH, "Failed to decode payload for "+payload.GUID, err.Error())
+			s.dal.Log(constants.AUTH, constants.HIGH, "Failed to decode payload for "+payload.GUID, err.Error())
 			return
 		}
 
@@ -30,13 +31,12 @@ func (s *Store) PostRegisterAppInstance() http.Handler {
 			if err.Error() == "Could not generate JWT" {
 				fmt.Println("JWT generating issue")
 				w.WriteHeader(http.StatusInternalServerError)
-				s.Log(AUTH, HIGH, "Could not generate JWT for "+payload.GUID, err.Error())
+				s.dal.Log(constants.AUTH, constants.HIGH, "Could not generate JWT for "+payload.GUID, err.Error())
 				return
 			}
 
 			if err.Error() == "Insufficient claims" {
 				w.WriteHeader(http.StatusBadRequest)
-
 				return
 			}
 

@@ -6,8 +6,9 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"strconv"
-	"log"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 )
+
 
 func (s *Store) GetLotByID() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -20,12 +21,15 @@ func (s *Store) GetLotByID() http.Handler {
 			return
 		}
 
-		lotInfo, err := s.DAL().GetLotInfo(lotID)
+		lotInfo, err := s.DAL().GetLotByID(lotID)
 		if err != nil {
 			if err.Error() == "ID not found" {
 				w.WriteHeader(http.StatusNotFound)
 				return
 			}
+			w.WriteHeader(http.StatusInternalServerError)
+			s.dal.Log(constants.DATA,constants.HIGH,err.Error())
+			return
 		}
 
 		w.WriteHeader(http.StatusOK)
@@ -39,11 +43,9 @@ func (s *Store) GetLots() http.Handler {
 
 		lots, err := s.DAL().GetLots()
 		if err != nil {
-			log.Fatal(err)
-			if err.Error() == "ID not found" {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
+			w.WriteHeader(http.StatusInternalServerError)
+			s.dal.Log(constants.DATA,constants.HIGH,err.Error())
+			return
 		}
 
 		w.WriteHeader(http.StatusOK)

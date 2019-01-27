@@ -14,15 +14,22 @@ func CreateRouter(s *Store) *mux.Router {
 	//route registration
 	router.Handle(constants.LotByID, s.AuthMiddleware(s.GetLotByID())).Methods("GET")
 	router.Handle(constants.Lots, s.AuthMiddleware(s.GetLots())).Methods("GET")
+
 	router.Handle(constants.UntrackedLots, s.AuthMiddleware(s.GetUntrackedLots())).Methods("GET")
 	router.Handle(constants.UntrackedLotsByID, s.AuthMiddleware(s.GetUntrackedLotByID())).Methods("GET")
+
+	router.Handle(constants.Permits, s.AuthMiddleware(s.GetPermits())).Methods("GET")
+	router.Handle(constants.PermitsByID, s.AuthMiddleware(s.GetPermitByID())).Methods("GET")
+
 	router.Handle(constants.LotDataOverTimeFull, s.AuthMiddleware(s.GetLotDataOverTime())).Methods("GET")
+
 	router.Handle(constants.RegisterAppInstance, s.PostRegisterAppInstance()).Methods("POST") //todo: secure this route
+
 	router.Handle(constants.LotAverageFreespaceByDay,s.AuthMiddleware(s.GetLotAverageFreespaces())).Methods("GET")
 
 	return router
 }
 
-func (s *Store)AuthMiddleware(endpoint http.Handler)(http.Handler) {
+func (s *Store)AuthMiddleware(endpoint http.Handler) (http.Handler) {
 	return middleware.AuthenticationMiddleware(endpoint, s.dal.GetTokenSecret)
 }
