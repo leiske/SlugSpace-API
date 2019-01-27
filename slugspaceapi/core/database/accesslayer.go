@@ -141,6 +141,37 @@ func (d DBAccessLayer) GetPayStations() ([]models.PayStation, error) {
 	return payStations, rows.Err()
 }
 
+func (d DBAccessLayer) GetLotAvailabilityByID(id int) (models.LotAvailability, error) {
+	availability := models.LotAvailability{}
+	err := d.DB.QueryRow(utils.GetLotAvailabilityByID, id).Scan(&availability.Id, &availability.Name)
+	if err == sql.ErrNoRows {
+		err = IDNotFoundError
+	}
+
+	return availability, err //the err will either be nil or contain something
+}
+
+func (d DBAccessLayer) GetLotAvailabilities() ([]models.LotAvailability, error) {
+	var availabilities []models.LotAvailability
+
+	rows, err := d.DB.Query(utils.GetLotAvailabilities)
+	if err != nil {
+		return availabilities, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		availability := models.LotAvailability{}
+		if err = rows.Scan(&availability.Id, &availability.Name); err == nil {
+			availabilities = append(availabilities, availability)
+			continue
+		}
+		log.Println(err)
+	}
+
+	return availabilities, rows.Err()
+}
+
 func (d DBAccessLayer) GetLotDataOverTime(id int) ([]models.LotData, error) {
 	lotData := make([]models.LotData, 0)
 	rows, err := d.DB.Query(utils.GetLotDataOverTimeByID, id)

@@ -11,6 +11,8 @@ const (
 	PermitByID                     = Permits + "/{id}"
 	PayStations                        = "/v1/paystation"
 	PayStationByID                     = PayStations + "/{id}"
+	LotAvailabilities                        = "/v1/lotavailability"
+	LotAvailabilityByID                     = LotAvailabilities + "/{id}"
 	LotAverageFreespaceByDayNoDate = "/v1/avgfree"
 	LotAverageFreespaceByDay       = LotAverageFreespaceByDayNoDate // + "/{day}/{time}"
 

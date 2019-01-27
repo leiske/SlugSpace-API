@@ -132,3 +132,27 @@ func TestGetPayStations(t *testing.T) {
 	utils.Assert(paystations[0].Name,"30-Min Meter",t) // 30 Min Meter has ID = 1, always comes up first.
 }
 
+func TestGetLotAvailabilityByID(t *testing.T) {
+	availability, err := dbStore.DAL().GetLotAvailabilityByID(0)
+
+	utils.Assert(err,nil,t)
+	utils.AssertNonNil(availability,t)
+	utils.Assert(availability.Name,"Permit Required At All Times",t) // Permit Required At All Times has ID = 1, always comes up first.
+}
+
+func TestGetLotAvailabilityByID_NotFound(t *testing.T) {
+	availability, err := dbStore.DAL().GetLotAvailabilityByID(-1)
+
+	utils.Assert(err,database.IDNotFoundError,t)
+	utils.Assert(availability,models.LotAvailability{},t)
+}
+
+func TestGetLotAvailabilities(t *testing.T) {
+	availabilities, err := dbStore.DAL().GetLotAvailabilities()
+
+	utils.Assert(err,nil,t)
+	utils.AssertNonNil(availabilities,t)
+	utils.Assert(len(availabilities) > 0, true, t)
+	utils.Assert(availabilities[0].Name,"Permit Required At All Times",t) // 30 Min Meter has ID = 1, always comes up first.
+}
+

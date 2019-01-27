@@ -28,6 +28,9 @@ type DataAccessLayer interface {
 	GetPayStations() ([]models.PayStation, error)
 	GetPayStationByID(id int) (models.PayStation, error)
 
+	GetLotAvailabilities() ([]models.LotAvailability, error)
+	GetLotAvailabilityByID(id int) (models.LotAvailability, error)
+
 	GetLotDataOverTime(id int) ([]models.LotData, error)
 
 	GetLotAverageFreespacesByDate(lotID int, checkDate time.Time, checkTime time.Time) (models.LotAverageFreespaces, error)
