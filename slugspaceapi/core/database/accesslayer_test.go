@@ -62,7 +62,7 @@ func TestGetUntrackedLotByID(t *testing.T) {
 
 	utils.Assert(err,nil,t)
 	utils.AssertNonNil(lot,t)
-	utils.Assert(lot.LotName,"Hahn Student Services",t)
+	utils.Assert(lot.Name,"Hahn Student Services",t)
 	utils.Assert(lot.LotNumber,int64(101),t)
 }
 
@@ -79,7 +79,7 @@ func TestGetUntrackedLots(t *testing.T) {
 	utils.Assert(err,nil,t)
 	utils.AssertNonNil(lots,t)
 	utils.Assert(len(lots) > 0, true, t)
-	utils.Assert(lots[0].LotName,"Hahn Student Services",t)// Hahn has ID = 1, always comes up first.
+	utils.Assert(lots[0].Name,"Hahn Student Services",t) // Hahn has ID = 1, always comes up first.
 }
 
 func TestGetPermitByID(t *testing.T) {
@@ -87,8 +87,8 @@ func TestGetPermitByID(t *testing.T) {
 
 	utils.Assert(err,nil,t)
 	utils.AssertNonNil(permit,t)
-	utils.Assert(permit.PermitName,"A",t)
-	utils.Assert(permit.PermitInfo,"",t)
+	utils.Assert(permit.Name,"A",t)
+	utils.Assert(permit.Info,"",t)
 }
 
 func TestGetPermitByID_NotFound(t *testing.T) {
@@ -104,7 +104,31 @@ func TestGetPermits(t *testing.T) {
 	utils.Assert(err,nil,t)
 	utils.AssertNonNil(permits,t)
 	utils.Assert(len(permits) > 0, true, t)
-	utils.Assert(permits[0].PermitName,"A",t)// A has ID = 1, always comes up first.
-	utils.Assert(permits[0].PermitInfo,"",t)// A has ID = 1, always comes up first.
-
+	utils.Assert(permits[0].Name,"A",t) // A has ID = 1, always comes up first.
+	utils.Assert(permits[0].Info,"",t)
 }
+
+func TestGetPayStationByID(t *testing.T) {
+	paystation, err := dbStore.DAL().GetPayStationByID(1)
+
+	utils.Assert(err,nil,t)
+	utils.AssertNonNil(paystation,t)
+	utils.Assert(paystation.Name,"30-Min Meter",t) // 30 Min Meter has ID = 1, always comes up first.
+}
+
+func TestGetPayStationByID_NotFound(t *testing.T) {
+	paystation, err := dbStore.DAL().GetPayStationByID(-1)
+
+	utils.Assert(err,database.IDNotFoundError,t)
+	utils.Assert(paystation,models.PayStation{},t)
+}
+
+func TestGetPayStations(t *testing.T) {
+	paystations, err := dbStore.DAL().GetPayStations()
+
+	utils.Assert(err,nil,t)
+	utils.AssertNonNil(paystations,t)
+	utils.Assert(len(paystations) > 0, true, t)
+	utils.Assert(paystations[0].Name,"30-Min Meter",t) // 30 Min Meter has ID = 1, always comes up first.
+}
+

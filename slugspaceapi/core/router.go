@@ -5,7 +5,7 @@ import (
 	"github.com/colbyleiske/slugspace/slugspaceapi/core/middleware"
 	"github.com/gorilla/mux"
 	"net/http"
-)
+		)
 
 func CreateRouter(s *Store) *mux.Router {
 	router := mux.NewRouter()
@@ -19,7 +19,10 @@ func CreateRouter(s *Store) *mux.Router {
 	router.Handle(constants.UntrackedLotsByID, s.AuthMiddleware(s.GetUntrackedLotByID())).Methods("GET")
 
 	router.Handle(constants.Permits, s.AuthMiddleware(s.GetPermits())).Methods("GET")
-	router.Handle(constants.PermitsByID, s.AuthMiddleware(s.GetPermitByID())).Methods("GET")
+	router.Handle(constants.PermitByID, s.AuthMiddleware(s.GetPermitByID())).Methods("GET")
+
+	router.Handle(constants.PayStations, s.AuthMiddleware(s.GetPayStations())).Methods("GET")
+	router.Handle(constants.PayStationByID, s.AuthMiddleware(s.GetPayStationByID())).Methods("GET")
 
 	router.Handle(constants.LotDataOverTimeFull, s.AuthMiddleware(s.GetLotDataOverTime())).Methods("GET")
 
@@ -33,3 +36,4 @@ func CreateRouter(s *Store) *mux.Router {
 func (s *Store)AuthMiddleware(endpoint http.Handler) (http.Handler) {
 	return middleware.AuthenticationMiddleware(endpoint, s.dal.GetTokenSecret)
 }
+

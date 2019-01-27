@@ -1,14 +1,16 @@
 package constants
 
 const (
-	LotDataOverTimeFull            = LotDataOverTimeNoID + "/{lotID}"
+	LotDataOverTimeFull            = LotDataOverTimeNoID + "/{id}"
 	LotDataOverTimeNoID            = "/v1/lotdataovertime"
-	LotByID                        = Lots + "/{lotID}"
+	LotByID                        = Lots + "/{id}"
 	Lots                           = "/v1/lot"
 	UntrackedLots                  = "/v1/untrackedlot"
-	UntrackedLotsByID              = UntrackedLots + "/{lotID}"
-	Permits                  = "/v1/permit"
-	PermitsByID              = Permits + "/{permitID}"
+	UntrackedLotsByID              = UntrackedLots + "/{id}"
+	Permits                        = "/v1/permit"
+	PermitByID                     = Permits + "/{id}"
+	PayStations                        = "/v1/paystation"
+	PayStationByID                     = PayStations + "/{id}"
 	LotAverageFreespaceByDayNoDate = "/v1/avgfree"
 	LotAverageFreespaceByDay       = LotAverageFreespaceByDayNoDate // + "/{day}/{time}"
 

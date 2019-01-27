@@ -16,17 +16,19 @@ type Store struct {
 }
 
 type DataAccessLayer interface {
-	GetLotByID(lotID int) (models.Lot, error)
+	GetLotByID(id int) (models.Lot, error)
 	GetLots() ([]models.Lot, error)
 
 	GetUntrackedLots() ([]models.UntrackedLot, error)
-	GetUntrackedLotByID(lotID int) (models.UntrackedLot, error)
+	GetUntrackedLotByID(id int) (models.UntrackedLot, error)
 
 	GetPermits() ([]models.Permit, error)
-	GetPermitByID(permitID int) (models.Permit, error)
+	GetPermitByID(id int) (models.Permit, error)
 
+	GetPayStations() ([]models.PayStation, error)
+	GetPayStationByID(id int) (models.PayStation, error)
 
-	GetLotDataOverTime(lotID int) ([]models.LotData, error)
+	GetLotDataOverTime(id int) ([]models.LotData, error)
 
 	GetLotAverageFreespacesByDate(lotID int, checkDate time.Time, checkTime time.Time) (models.LotAverageFreespaces, error)
 

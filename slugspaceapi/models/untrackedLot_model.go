@@ -3,7 +3,7 @@ package models
 type UntrackedLot struct {
 	Id int64 `json:"id"`
 
-	LotName string `json:"lotName"`
+	Name string `json:"lotName"`
 
 	LotNumber int64 `json:"lotNumber"`
 

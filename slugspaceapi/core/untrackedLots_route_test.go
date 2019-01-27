@@ -13,8 +13,8 @@ import (
 )
 
 var untrackedLot = models.UntrackedLot{
-	Id: 0,
-	LotName: "Test Untracked Lot Name",
+	Id:        0,
+	Name:      "Test Untracked Lot Name",
 	LotNumber: 1,
 }
 

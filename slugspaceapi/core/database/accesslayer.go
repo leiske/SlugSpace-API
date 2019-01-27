@@ -15,9 +15,9 @@ type DBAccessLayer struct {
 
 var IDNotFoundError = errors.New("ID not found")
 
-func (d DBAccessLayer) GetLotByID(lotID int) (models.Lot, error) {
+func (d DBAccessLayer) GetLotByID(id int) (models.Lot, error) {
 	lotInfo := models.Lot{}
-	err := d.DB.QueryRow(utils.GetLotByID, lotID).Scan(&lotInfo.Id, &lotInfo.FullName, &lotInfo.Name, &lotInfo.Description, &lotInfo.ImageURI, &lotInfo.FreeSpaces, &lotInfo.TotalSpaces, &lotInfo.Longitude, &lotInfo.Latitude, &lotInfo.LastUpdated)
+	err := d.DB.QueryRow(utils.GetLotByID, id).Scan(&lotInfo.Id, &lotInfo.FullName, &lotInfo.Name, &lotInfo.Description, &lotInfo.ImageURI, &lotInfo.FreeSpaces, &lotInfo.TotalSpaces, &lotInfo.Longitude, &lotInfo.Latitude, &lotInfo.LastUpdated)
 	if err == sql.ErrNoRows {
 		err = IDNotFoundError
 	}
@@ -46,9 +46,9 @@ func (d DBAccessLayer) GetLots() ([]models.Lot, error) {
 	return lots, rows.Err()
 }
 
-func (d DBAccessLayer) GetUntrackedLotByID(lotID int) (models.UntrackedLot, error) {
+func (d DBAccessLayer) GetUntrackedLotByID(id int) (models.UntrackedLot, error) {
 	lotInfo := models.UntrackedLot{}
-	err := d.DB.QueryRow(utils.GetUntrackedLotByID, lotID).Scan(&lotInfo.Id, &lotInfo.LotName, &lotInfo.LotNumber, &lotInfo.Longitude, &lotInfo.Latitude, &lotInfo.Permits, &lotInfo.FreeAfter, &lotInfo.PayStations)
+	err := d.DB.QueryRow(utils.GetUntrackedLotByID, id).Scan(&lotInfo.Id, &lotInfo.Name, &lotInfo.LotNumber, &lotInfo.Longitude, &lotInfo.Latitude, &lotInfo.Permits, &lotInfo.FreeAfter, &lotInfo.PayStations)
 	if err == sql.ErrNoRows {
 		err = IDNotFoundError
 	}
@@ -68,7 +68,7 @@ func (d DBAccessLayer) GetUntrackedLots() ([]models.UntrackedLot, error) {
 
 	for rows.Next() {
 		lotInfo := models.UntrackedLot{}
-		if err = rows.Scan(&lotInfo.Id, &lotInfo.LotName, &lotInfo.LotNumber, &lotInfo.Longitude, &lotInfo.Latitude, &lotInfo.Permits, &lotInfo.FreeAfter, &lotInfo.PayStations); err == nil {
+		if err = rows.Scan(&lotInfo.Id, &lotInfo.Name, &lotInfo.LotNumber, &lotInfo.Longitude, &lotInfo.Latitude, &lotInfo.Permits, &lotInfo.FreeAfter, &lotInfo.PayStations); err == nil {
 			lots = append(lots, lotInfo)
 			continue
 		}
@@ -78,10 +78,10 @@ func (d DBAccessLayer) GetUntrackedLots() ([]models.UntrackedLot, error) {
 	return lots, rows.Err()
 }
 
-func (d DBAccessLayer) GetPermitByID(permitID int) (models.Permit, error) {
+func (d DBAccessLayer) GetPermitByID(id int) (models.Permit, error) {
 	permit := models.Permit{}
 
-	err := d.DB.QueryRow(utils.GetPermitByID, permitID).Scan(&permit.Id, &permit.PermitName, &permit.PermitInfo)
+	err := d.DB.QueryRow(utils.GetPermitByID, id).Scan(&permit.Id, &permit.Name, &permit.Info)
 	if err == sql.ErrNoRows {
 		err = IDNotFoundError
 	}
@@ -100,7 +100,7 @@ func (d DBAccessLayer) GetPermits() ([]models.Permit, error) {
 
 	for rows.Next() {
 		permit := models.Permit{}
-		if err = rows.Scan(&permit.Id, &permit.PermitName, &permit.PermitInfo); err == nil {
+		if err = rows.Scan(&permit.Id, &permit.Name, &permit.Info); err == nil {
 			permits = append(permits, permit)
 			continue
 		}
@@ -110,9 +110,40 @@ func (d DBAccessLayer) GetPermits() ([]models.Permit, error) {
 	return permits, rows.Err()
 }
 
-func (d DBAccessLayer) GetLotDataOverTime(lotID int) ([]models.LotData, error) {
+func (d DBAccessLayer) GetPayStationByID(id int) (models.PayStation, error) {
+	payStation := models.PayStation{}
+	err := d.DB.QueryRow(utils.GetPayStationByID, id).Scan(&payStation.Id, &payStation.Name)
+	if err == sql.ErrNoRows {
+		err = IDNotFoundError
+	}
+
+	return payStation, err //the err will either be nil or contain something
+}
+
+func (d DBAccessLayer) GetPayStations() ([]models.PayStation, error) {
+	var payStations []models.PayStation
+
+	rows, err := d.DB.Query(utils.GetPayStations)
+	if err != nil {
+		return payStations, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		payStation := models.PayStation{}
+		if err = rows.Scan(&payStation.Id, &payStation.Name); err == nil {
+			payStations = append(payStations, payStation)
+			continue
+		}
+		log.Println(err)
+	}
+
+	return payStations, rows.Err()
+}
+
+func (d DBAccessLayer) GetLotDataOverTime(id int) ([]models.LotData, error) {
 	lotData := make([]models.LotData, 0)
-	rows, err := d.DB.Query(utils.GetLotDataOverTimeByID, lotID)
+	rows, err := d.DB.Query(utils.GetLotDataOverTimeByID, id)
 	if err != nil {
 		return []models.LotData{}, err
 	}
@@ -130,7 +161,7 @@ func (d DBAccessLayer) GetLotDataOverTime(lotID int) ([]models.LotData, error) {
 	return lotData, rows.Err()
 }
 
-func (d DBAccessLayer) GetLotAverageFreespacesByDate(lotID int, checkDate time.Time, checkTime time.Time) (models.LotAverageFreespaces, error) {
+func (d DBAccessLayer) GetLotAverageFreespacesByDate(id int, checkDate time.Time, checkTime time.Time) (models.LotAverageFreespaces, error) {
 	lotAverageFreespaces := models.LotAverageFreespaces{}
 
 	tx , err := d.DB.Begin()
@@ -147,7 +178,7 @@ func (d DBAccessLayer) GetLotAverageFreespacesByDate(lotID int, checkDate time.T
 		return lotAverageFreespaces, err
 	}
 
-	err = tx.QueryRow(utils.GetLotAverageFreespacesByDay, lotID).Scan(&lotAverageFreespaces.AverageFreeSpaces)
+	err = tx.QueryRow(utils.GetLotAverageFreespacesByDay, id).Scan(&lotAverageFreespaces.AverageFreeSpaces)
 	if err == sql.ErrNoRows {
 		err = IDNotFoundError
 	}

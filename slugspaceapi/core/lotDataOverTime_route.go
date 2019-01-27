@@ -14,7 +14,7 @@ func (s *Store) GetLotDataOverTime() http.Handler {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 		vars := mux.Vars(r)
-		lotID, err := strconv.Atoi(vars["lotID"])
+		lotID, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return

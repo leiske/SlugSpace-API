@@ -13,9 +13,9 @@ import (
 )
 
 var permit = models.Permit{
-	Id: 1,
-	PermitName: "Test Permit Name",
-	PermitInfo: "Test Permit Info",
+	Id:   1,
+	Name: "Test Permit Name",
+	Info: "Test Permit Info",
 }
 
 func (t TestStoreAccessLayer) GetPermits() ([]models.Permit, error) {
