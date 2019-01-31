@@ -5,7 +5,8 @@ import (
 	"github.com/colbyleiske/slugspace/slugspaceapi/core/middleware"
 	"github.com/gorilla/mux"
 	"net/http"
-		)
+	"strconv"
+)
 
 func CreateRouter(s *Store) *mux.Router {
 	router := mux.NewRouter()
@@ -38,5 +39,11 @@ func CreateRouter(s *Store) *mux.Router {
 
 func (s *Store)AuthMiddleware(endpoint http.Handler) (http.Handler) {
 	return middleware.AuthenticationMiddleware(endpoint, s.dal.GetTokenSecret)
+}
+
+func (s *Store) GetID(r *http.Request) (int, error) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	return id,err
 }
 

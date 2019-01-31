@@ -4,9 +4,7 @@ import (
 	"net/http"
 
 	"encoding/json"
-	"github.com/gorilla/mux"
-	"strconv"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
+			"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 )
 
 
@@ -14,14 +12,13 @@ func (s *Store) GetLotByID() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-		vars := mux.Vars(r)
-		lotID, err := strconv.Atoi(vars["id"])
+		id, err := s.GetID(r)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		lotInfo, err := s.DAL().GetLotByID(lotID)
+		lotInfo, err := s.DAL().GetLotByID(id)
 		if err != nil {
 			if err.Error() == "ID not found" {
 				w.WriteHeader(http.StatusNotFound)

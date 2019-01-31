@@ -2,9 +2,7 @@ package slugspace
 
 import (
 	"net/http"
-	"github.com/gorilla/mux"
-	"strconv"
-	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
+			"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 	"encoding/json"
 )
 
@@ -12,8 +10,7 @@ func (s *Store) GetLotAvailabilityByID() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-		vars := mux.Vars(r)
-		id, err := strconv.Atoi(vars["id"])
+		id, err := s.GetID(r)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
