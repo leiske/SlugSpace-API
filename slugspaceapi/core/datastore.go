@@ -35,6 +35,8 @@ type DataAccessLayer interface {
 
 	GetLotAverageFreespacesByDate(lotID int, checkDate time.Time, checkTime time.Time) (models.LotAverageFreespaces, error)
 
+	GetTrackedLotFullInfoByID(lotID int) (models.TrackedLotFullInfo, error)
+
 	CreateJWT(payload *database.JWTPayload) (string, error)
 	GetTokenSecret(guid interface{}) (interface{}, bool, error)
 

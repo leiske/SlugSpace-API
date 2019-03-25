@@ -15,6 +15,8 @@ const (
 	LotAvailabilityByID                     = LotAvailabilities + "/{id}"
 	LotAverageFreespaceByDayNoDate = "/v1/avgfree"
 	LotAverageFreespaceByDay       = LotAverageFreespaceByDayNoDate // + "/{day}/{time}"
+	TrackedLotFullInfo = "/v1/trackedlotfullinfo/{id}"
+
 
 	RegisterAppInstance = "/v1/register"
 )

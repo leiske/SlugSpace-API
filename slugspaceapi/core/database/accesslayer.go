@@ -7,6 +7,8 @@ import (
 	"github.com/colbyleiske/slugspace/utils"
 	"log"
 	"time"
+	"strings"
+	"strconv"
 )
 
 type DBAccessLayer struct {
@@ -224,3 +226,70 @@ func (d DBAccessLayer) GetLotAverageFreespacesByDate(id int, checkDate time.Time
 	return lotAverageFreespaces, nil
 }
 
+func (d DBAccessLayer) GetTrackedLotFullInfoByID(id int) (models.TrackedLotFullInfo, error) {
+	lotInfo,err := d.GetLotByID(id)
+	if err != nil {
+		return models.TrackedLotFullInfo{}, err
+	}
+
+	untrackedLotInfo, err := d.GetUntrackedLotByID(int(lotInfo.UntrackedID))
+	if err != nil {
+		return models.TrackedLotFullInfo{}, err
+	}
+
+	permits := []models.Permit{}
+	for _,val := range strings.Split(strings.TrimSpace(untrackedLotInfo.Permits),",") {
+		permitID , err := strconv.Atoi(strings.TrimSpace(val))
+		if err != nil {
+			return models.TrackedLotFullInfo{}, err
+		}
+		permit,err := d.GetPermitByID(permitID)
+		if err != nil {
+			return models.TrackedLotFullInfo{}, err
+		}
+
+		permits = append(permits, permit)
+	}
+
+	payStations := []models.PayStation{}
+	for _,val := range strings.Split(strings.TrimSpace(untrackedLotInfo.PayStations),",") {
+		payStationID , err := strconv.Atoi(strings.TrimSpace(val))
+		if err != nil {
+			return models.TrackedLotFullInfo{}, err
+		}
+		payStation,err := d.GetPayStationByID(payStationID)
+		if err != nil {
+			return models.TrackedLotFullInfo{}, err
+		}
+
+		payStations = append(payStations, payStation)
+	}
+
+	freeAfterID, err := strconv.Atoi(untrackedLotInfo.FreeAfter)
+	if err != nil {
+		return models.TrackedLotFullInfo{}, err
+	}
+
+	freeAfter, err := d.GetLotAvailabilityByID(freeAfterID)
+	if err != nil {
+		return models.TrackedLotFullInfo{}, err
+	}
+
+	fullInfo := models.TrackedLotFullInfo{
+		Id:lotInfo.Id,
+		Name:lotInfo.Name,
+		FullName:lotInfo.FullName,
+		Latitude:lotInfo.Latitude,
+		Longitude:lotInfo.Longitude,
+		LastUpdated:lotInfo.LastUpdated,
+		FreeSpaces: lotInfo.FreeSpaces,
+		TotalSpaces: lotInfo.TotalSpaces,
+		Description: lotInfo.Description,
+		ImageURI: lotInfo.ImageURI,
+		Permits: permits,
+		PayStations: payStations,
+		LotAvailability: freeAfter,
+	}
+
+	return fullInfo, nil
+}
