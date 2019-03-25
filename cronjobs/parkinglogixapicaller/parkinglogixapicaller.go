@@ -13,8 +13,7 @@ import (
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
-	"strings"
-)
+	)
 
 type parkingLotData []struct {
 	LocationName string `json:"location_name"`
@@ -31,6 +30,10 @@ var (
 func main() {
 	db, err := sql.Open("mysql", utils.SQLCredentials)
 	if err != nil {
+		log.Fatal(err)
+	}
+	db.SetConnMaxLifetime(5*time.Second)
+	if err := db.Ping(); err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
@@ -68,27 +71,18 @@ func main() {
 			panic(err)
 		}
 
-		if _, err = stmt.Exec(parkingLotData[0].FreeSpaces, parkingLotData[0].DateTime, parkingLotData[0].LocationName); err != nil {
+		if _, err = stmt.Exec(parkingLotData[0].FreeSpaces, parkingLotData[0].LocationName); err != nil {
 			panic(err)
 		}
 
 		fmt.Printf("Updated %s at %v\n", parkingLotData[0].LocationName, time.Now())
-
-		//Sucks we have to replace the time zone offset. Feels bad , but in this case the API isn't returning a standard time formatting. Easiest fix to make this work with Go's formatting system.
-		date, err := time.Parse(dateFormat+" "+timeFormat+" "+offsetFormat, strings.Replace(parkingLotData[0].DateTime, "-8:00", "-08:00", -1))
-		if err != nil {
-			panic(err)
-		}
 
 		stmt, err = db.Prepare(utils.InsertLotDatapoint)
 		if err != nil {
 			panic(err)
 		}
 
-		timeLastUpdated := date.Format(timeFormat)
-		dateLastUpdated := date.Format(dateFormat)
-
-		if _, err = stmt.Exec(id+1, parkingLotData[0].FreeSpaces, dateLastUpdated, timeLastUpdated); err != nil {
+		if _, err = stmt.Exec(id+1, parkingLotData[0].FreeSpaces); err != nil {
 			panic(err)
 		}
 
