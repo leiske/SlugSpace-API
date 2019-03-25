@@ -17,7 +17,7 @@ var IDNotFoundError = errors.New("ID not found")
 
 func (d DBAccessLayer) GetLotByID(id int) (models.Lot, error) {
 	lotInfo := models.Lot{}
-	err := d.DB.QueryRow(utils.GetLotByID, id).Scan(&lotInfo.Id, &lotInfo.FullName, &lotInfo.Name, &lotInfo.Description, &lotInfo.ImageURI, &lotInfo.FreeSpaces, &lotInfo.TotalSpaces, &lotInfo.Longitude, &lotInfo.Latitude, &lotInfo.LastUpdated)
+	err := d.DB.QueryRow(utils.GetLotByID, id).Scan(&lotInfo.Id, &lotInfo.FullName, &lotInfo.Name, &lotInfo.Description, &lotInfo.ImageURI, &lotInfo.FreeSpaces, &lotInfo.TotalSpaces, &lotInfo.Longitude, &lotInfo.Latitude, &lotInfo.LastUpdated, &lotInfo.UntrackedID)
 	if err == sql.ErrNoRows {
 		err = IDNotFoundError
 	}
@@ -36,7 +36,7 @@ func (d DBAccessLayer) GetLots() ([]models.Lot, error) {
 
 	for rows.Next() {
 		lotInfo := models.Lot{}
-		if err = rows.Scan(&lotInfo.Id, &lotInfo.FullName, &lotInfo.Name, &lotInfo.Description, &lotInfo.ImageURI, &lotInfo.FreeSpaces, &lotInfo.TotalSpaces, &lotInfo.Longitude, &lotInfo.Latitude, &lotInfo.LastUpdated); err == nil {
+		if err = rows.Scan(&lotInfo.Id, &lotInfo.FullName, &lotInfo.Name, &lotInfo.Description, &lotInfo.ImageURI, &lotInfo.FreeSpaces, &lotInfo.TotalSpaces, &lotInfo.Longitude, &lotInfo.Latitude, &lotInfo.LastUpdated, &lotInfo.UntrackedID); err == nil {
 			lots = append(lots, lotInfo)
 			continue
 		}

@@ -20,4 +20,6 @@ type Lot struct {
 	Latitude float64 `json:"latitude"`
 
 	LastUpdated string `json:"lastUpdated"`
+
+	UntrackedID int64 `json:"untrackedID"`
 }

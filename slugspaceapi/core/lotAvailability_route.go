@@ -2,7 +2,7 @@ package slugspace
 
 import (
 	"net/http"
-			"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
+	"github.com/colbyleiske/slugspace/slugspaceapi/core/constants"
 	"encoding/json"
 )
 
