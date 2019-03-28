@@ -324,24 +324,28 @@ func (d DBAccessLayer) GetLotPredictedFreespaceByDateTime(lotID int, datetime ti
 		return models.LotPredictedFreespace{}, err
 	}
 
-	//This is not the end-all of statistacal algorithms hahahaha
+	//This is not the end-all of statistical algorithms hahahaha
 	//In talks with a data science consulting firm, gonna make this way better later
 	res := tx.QueryRow("select median(freeSpaces) over (partition by lotID) as predictedFreeSpace from tbl_LotDataOverTime where ((`date` = @date) OR (`date` = DATE_SUB( @date, INTERVAL 7 DAY )) " +
 		"OR (`date` = DATE_SUB( @date, INTERVAL 14 DAY )) OR (`date` = DATE_SUB( @date, INTERVAL 21 DAY ))) AND (`time` > SUBTIME(@time,\"0:15:0\") and `time` < ADDTIME(@time,\"0:15:0\")) AND lotID = @lotID LIMIT 1;")
 
-	var freespaces int
-	err = res.Scan(&freespaces)
+	var freespacesString string
+	err = res.Scan(&freespacesString)
 	if err != nil {
 		return models.LotPredictedFreespace{}, err
 	}
 
-	isPredicted := datetime.After(time.Now())
+	freespaces , err := strconv.ParseFloat(freespacesString,64)
+	if err != nil {
+		return models.LotPredictedFreespace{}, err
+	}
+
 
 	err = tx.Commit()
 	if err != nil {
 		return models.LotPredictedFreespace{}, err
 	}
 
-	return models.LotPredictedFreespace{PredictedFreespace: freespaces, IsPredicted: isPredicted}, nil
+	return models.LotPredictedFreespace{ID: lotID, PredictedFreespace: int(freespaces), IsPredicted: datetime.After(time.Now())}, nil
 
 }
