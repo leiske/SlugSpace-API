@@ -13,8 +13,7 @@ const (
 	PayStationByID                     = PayStations + "/{id}"
 	LotAvailabilities                        = "/v1/lotavailability"
 	LotAvailabilityByID                     = LotAvailabilities + "/{id}"
-	LotAverageFreespaceByDayNoDate = "/v1/avgfree"
-	LotAverageFreespaceByDay       = LotAverageFreespaceByDayNoDate // + "/{day}/{time}"
+	LotPredictedFreespace       = "/v1/predictfreespace" //needs ?id=1&datetime="XXXX-XX-XX X:X:X" -> nasty that I use multiple styles of parameters here. TODO make parameters consistently ?paramterName=paramterVal
 	TrackedLotFullInfo = "/v1/trackedlotfullinfo/{id}"
 
 

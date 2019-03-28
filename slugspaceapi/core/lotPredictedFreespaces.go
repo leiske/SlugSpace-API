@@ -11,7 +11,7 @@ import (
 
 //use on app https://stackoverflow.com/questions/10599148/how-do-i-get-the-current-time-only-in-javascript/25164024
 //use on app https://stackoverflow.com/questions/1531093/how-do-i-get-the-current-date-in-javascript
-func (s *Store) GetLotAverageFreespaces() http.Handler {
+func (s *Store) GetLotPredictedFreespace() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
@@ -26,31 +26,19 @@ func (s *Store) GetLotAverageFreespaces() http.Handler {
 			return
 		}
 
-		dateString, err := getURLParameter("date", r)
+		dateString, err := getURLParameter("datetime", r)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		timeString, err := getURLParameter("time", r)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest) //TODO make these actually reply something useful
-			return
-		}
-
-		checkDate, err := time.Parse("1-2-2006", dateString)
+		datetime, err := time.Parse("1-2-2006 15:4:5", dateString)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		checkTime, err := time.Parse("3:4:5", timeString)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-
-		lotData, err := s.DAL().GetLotAverageFreespacesByDate(lotID, checkDate, checkTime)
+		predictedSpaces, err := s.DAL().GetLotPredictedFreespaceByDateTime(lotID, datetime)
 		if err != nil {
 			if err.Error() == "ID not found" {
 				w.WriteHeader(http.StatusOK)
@@ -60,7 +48,7 @@ func (s *Store) GetLotAverageFreespaces() http.Handler {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(lotData)
+		json.NewEncoder(w).Encode(predictedSpaces)
 	})
 }
 

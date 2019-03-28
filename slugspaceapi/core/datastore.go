@@ -34,6 +34,8 @@ type DataAccessLayer interface {
 	GetLotDataOverTime(id int) ([]models.LotData, error)
 
 	GetLotAverageFreespacesByDate(lotID int, checkDate time.Time, checkTime time.Time) (models.LotAverageFreespaces, error)
+	GetLotPredictedFreespaceByDateTime(lotID int, datetime time.Time) (models.LotPredictedFreespace, error)
+
 
 	GetTrackedLotFullInfoByID(lotID int) (models.TrackedLotFullInfo, error)
 

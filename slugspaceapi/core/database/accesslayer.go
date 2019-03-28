@@ -9,7 +9,7 @@ import (
 	"time"
 	"strings"
 	"strconv"
-)
+	)
 
 type DBAccessLayer struct {
 	DB *sql.DB
@@ -226,6 +226,7 @@ func (d DBAccessLayer) GetLotAverageFreespacesByDate(id int, checkDate time.Time
 	return lotAverageFreespaces, nil
 }
 
+//Refactor and make cleaner......
 func (d DBAccessLayer) GetTrackedLotFullInfoByID(id int) (models.TrackedLotFullInfo, error) {
 	lotInfo,err := d.GetLotByID(id)
 	if err != nil {
@@ -292,4 +293,55 @@ func (d DBAccessLayer) GetTrackedLotFullInfoByID(id int) (models.TrackedLotFullI
 	}
 
 	return fullInfo, nil
+}
+
+//This should be a stored procedure. DBeaver sucks and Linux needs a better mariadb client lol
+//Right now I just want to be demo ready... TODO refactor this
+func (d DBAccessLayer) GetLotPredictedFreespaceByDateTime(lotID int, datetime time.Time) (models.LotPredictedFreespace, error) {
+	tx, err := d.DB.Begin()
+	if err != nil {
+		return models.LotPredictedFreespace{}, err
+	}
+
+	_, err = tx.Exec("set @parkingPeriod = ?;",datetime)
+	if err != nil {
+		return models.LotPredictedFreespace{}, err
+	}
+
+	_, err = tx.Exec("set @lotID = ?;",lotID)
+	if err != nil {
+		return models.LotPredictedFreespace{}, err
+	}
+
+
+	_, err = tx.Exec(`set @date = convert(@parkingPeriod,DATE);`)
+	if err != nil {
+		tx.Rollback()
+		return models.LotPredictedFreespace{}, err
+	}
+	_, err = tx.Exec(`set @time = convert(@parkingPeriod,TIME);`)
+	if err != nil {
+		return models.LotPredictedFreespace{}, err
+	}
+
+	//This is not the end-all of statistacal algorithms hahahaha
+	//In talks with a data science consulting firm, gonna make this way better later
+	res := tx.QueryRow("select median(freeSpaces) over (partition by lotID) as predictedFreeSpace from tbl_LotDataOverTime where ((`date` = @date) OR (`date` = DATE_SUB( @date, INTERVAL 7 DAY )) " +
+		"OR (`date` = DATE_SUB( @date, INTERVAL 14 DAY )) OR (`date` = DATE_SUB( @date, INTERVAL 21 DAY ))) AND (`time` > SUBTIME(@time,\"0:15:0\") and `time` < ADDTIME(@time,\"0:15:0\")) AND lotID = @lotID LIMIT 1;")
+
+	var freespaces int
+	err = res.Scan(&freespaces)
+	if err != nil {
+		return models.LotPredictedFreespace{}, err
+	}
+
+	isPredicted := datetime.After(time.Now())
+
+	err = tx.Commit()
+	if err != nil {
+		return models.LotPredictedFreespace{}, err
+	}
+
+	return models.LotPredictedFreespace{PredictedFreespace: freespaces, IsPredicted: isPredicted}, nil
+
 }
